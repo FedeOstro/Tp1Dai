@@ -1,0 +1,17 @@
+{
+  "name": "entrega-1-dei",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Fede_Simon",
+  "license": "ISC",
+  "dependencies": {
+    "exrpess": "^0.0.1-security",
+    "pg": "^8.11.3"
+  }
+}
