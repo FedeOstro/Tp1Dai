@@ -44,11 +44,30 @@ export class EventosRecolectar{
     }
 
     ConsultaEvento(id){
-        const sql = `SELECT id, name, full_address, longitud, latitud, max_capacity
+        const sql = `SELECT e.id, e.name, e.description, e.stard_date, e.duration_in_minutes, e.price, e.enabled_for_enrollment, e.max_assistence , ec.full_address, ec.longitud, latitud, max_capacity
         FROM event e
         JOIN event_locations ec ON e.id_event_locations = ec.id
         WHERE e.id = '${id}'`;
         const rta = Bd.Consulta(sql)
         return rta
     }
+
+    autenticarUsuario(username, password){
+        const sql = `UPDATE username, password 
+        FROM users
+        `
+        //El profe lo tiene q explicar
+        const rta = Bd.Consulta(sql)
+        return rta
+    }
+
+    autenticarRegistro(first_name, last_name, username, password){
+        const sql = `UPDATE first_name, last_name, username, password 
+        FROM users
+        `
+        //El profe lo tiene q explicar
+        const rta = Bd.Consulta(sql)
+        return rta
+    }
+
 }
