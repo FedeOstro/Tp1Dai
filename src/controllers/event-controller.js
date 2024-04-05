@@ -7,25 +7,29 @@ router.get("/",  (request, response) => {
     const category = request.query.category;
     const startDate = request.query.startDate;
     const tag = request.query.tag;
-    try {
-        const todoseventos = EventosRecolectar.getAllEvent();
-        return response.json(todoseventos);
-    } catch(error){
-        console.log("Un error");
-        return response.json("Un Error");
+    if(limit != null || offset != null){
+        try {
+            const todoseventos = EventosRecolectar.getAllEvent();
+            return response.json(todoseventos);
+        } catch(error){
+            console.log("Un error");
+            return response.json("Un Error");
+        }
+    }else if(name != null || category != null || startDate != null || tag != null){
+        try {
+            const BusquedaEvent = EventosRecolectar.BusquedaEvent(name, category, startDate, tag);
+            return response.json(BusquedaEvent);
+        } catch(error){
+            console.log("Ej 3")
+            return response.json("Ej 3")
+        }
+    }else{
+        console.log("error endpoint /")
     }
+    
+    
 })
 
-router.get("/", (request, response) => {
-    
-    try {
-        const BusquedaEvent = EventosRecolectar.BusquedaEvent(name, category, startDate, tag);
-        return response.json(BusquedaEvent);
-    } catch(error){
-        console.log("Ej 3")
-        return response.json("Ej 3")
-    }
-})
 
 router.get("/:id/enrollment", (request, response) => {
     const first_name = request.query.fisrt_name
@@ -39,6 +43,15 @@ router.get("/:id/enrollment", (request, response) => {
     }catch(error){
         console.log("Ej 5")
         return response.json("Ej 5")
+    }
+})
+
+router.get("/:id", (request, response) => {
+    try {  
+        const evento = EventosRecolectar.ConsultaEvento(request.params.id);
+    } catch(error){
+        console.log("Error ejercicio 4")
+        return response.json("No se encontro evento")
     }
 })
 
