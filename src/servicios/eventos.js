@@ -17,10 +17,11 @@ export class EventosRecolectar{
     }
 
     BusquedaEvento(name, category, startDate, tag){
-        const sql = `SELECT *
-            FROM event
-            JOIN event_categories ec ON event.id_event_category = ec.id
-          JOIN event_tags et ON event.id = et.id_event
+        const sql = `SELECT e.id, e.name, e.description, e.start_date, e.duration_in_minutes, e.price, e.enabled_for_enrollment, e.max_assistance, u.id, u.username, u.first_name, u.last_name,ec.id, ec.name,  
+            FROM event e    
+            JOIN users u ON e.id_creator_user = u.id
+            JOIN event_categories ec ON e.id_event_category = ec.id
+            JOIN event_tags et ON event.id = et.id_event
             JOIN tags t ON et.id_tag = t.id
             WHERE event.name = '${categorias.name}' AND ec.name = '${categorias.category}' AND event.start_date = '${categorias.startDate}' AND t.name = '${categorias.tag}`;
 
@@ -29,13 +30,10 @@ export class EventosRecolectar{
         //seguir con el script
     }
 
-    RecolectUsuario(first_name, last_name, username, attended){
-        const sql = `SELECT *
-            FROM event
-            JOIN event_categories ec ON event.id_event_category = ec.id
-            JOIN event_tags et ON event.id = et.id_event
-            JOIN tags t ON et.id_tag = t.id
-            WHERE event.name = '${categorias.name}' AND ec.name = '${categorias.category}' AND event.start_date = '${categorias.startDate}' AND t.name = '${categorias.tag}`;
+    RecolectUsuario(first_name, last_name, username, attended, rating){
+        const sql = `SELECT id, username, first_name, last_name
+            FROM users 
+            JOIN event_enrolments ee ON users.id = ee, `
 
     }
 }

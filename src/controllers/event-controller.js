@@ -3,7 +3,10 @@ import { EventosRecolectar } from "../servicios/eventos.js";
 router.get("/",  (request, response) => {
     const limit = request.query.limit;
     const offset = request.query.offset;
-
+    const name = request.query.name;
+    const category = request.query.category;
+    const startDate = request.query.startDate;
+    const tag = request.query.tag;
     try {
         const todoseventos = EventosRecolectar.getAllEvent();
         return response.json(todoseventos);
@@ -14,10 +17,7 @@ router.get("/",  (request, response) => {
 })
 
 router.get("/", (request, response) => {
-    const name = request.query.name;
-    const category = request.query.category;
-    const startDate = request.query.startDate;
-    const tag = request.query.tag;
+    
     try {
         const BusquedaEvent = EventosRecolectar.BusquedaEvent(name, category, startDate, tag);
         return response.json(BusquedaEvent);
@@ -32,8 +32,9 @@ router.get("/:id/enrollment", (request, response) => {
     const last_name = request.query.last_name
     const username = request.query.username
     const attended = request.query.attended
+    const rating = request.query.rating
     try{
-        const BusquedaUsuario = EventosRecolectar.RecolectUsuario(first_name, last_name, username, attended)
+        const BusquedaUsuario = EventosRecolectar.RecolectUsuario(first_name, last_name, username, attended, rating)
         return response.json(BusquedaUsuario)
     }catch(error){
         console.log("Ej 5")
