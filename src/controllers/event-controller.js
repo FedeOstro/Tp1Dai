@@ -11,7 +11,7 @@ router.get("/",  (request, response) => {
         console.log("Un error");
         return response.json("Un Error");
     }
-});
+})
 
 router.get("/", (request, response) => {
     const name = request.query.name;
@@ -22,8 +22,22 @@ router.get("/", (request, response) => {
         const BusquedaEvent = EventosRecolectar.BusquedaEvent(name, category, startDate, tag);
         return response.json(BusquedaEvent);
     } catch(error){
-        console.log("Un eror Papu :V")
-        return response.json("La hora sad :'v")
+        console.log("Ej 3")
+        return response.json("Ej 3")
+    }
+})
+
+router.get("/:id/enrollment", (request, response) => {
+    const first_name = request.query.fisrt_name
+    const last_name = request.query.last_name
+    const username = request.query.username
+    const attended = request.query.attended
+    try{
+        const BusquedaUsuario = EventosRecolectar.RecolectUsuario(first_name, last_name, username, attended)
+        return response.json(BusquedaUsuario)
+    }catch(error){
+        console.log("Ej 5")
+        return response.json("Ej 5")
     }
 })
 
