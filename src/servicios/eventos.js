@@ -1,6 +1,6 @@
 import { Bd } from "../repositories/events-repositories";
 
-export class EventosRecolectar{
+export class EventosServicios{
     getAllEvent(pageSize, requestedPage){
         const sql = `SELECT e.id, e.name, e.description, e.start_date, e.duration_in_minutes, e.price, e.enabled_for_enrollment, e.max_assistance, t.name, u.id, u.username, u.first_name, u.last_name,ec.id, ec.name, el.id, el.name, el.full_address, el.latitude, el.longitude, el.max_capacity  
         FROM event e    
@@ -10,10 +10,43 @@ export class EventosRecolectar{
         JOIN tags t ON et.id_tag = t.id
         JOIN event_location el ON e.id_envet_location = el.id limit  ${pageSize} offset ${requestedPage}`;
         const result = Bd.Consulta(sql);
-        throw new Error("Error en el sevicio de events")
+        var event = new Object();
+        var creator_user = new Object();
+        var event_categories  = new Object();
+        var event_location = new Object();
+
+    
+        description = result.e.description,
+        start_Date = result.e.start_date,
+        price = result.e.price,
+        enable_for_enrollment = result.e.enable_for_enrollment,
+        max_assistance = result.e.max_assistance,
+        tags = result.t.tags,
+
+        const parsedDB = result.map(row => {
+            event.id = row.e.id
+            event.name = row.e.name
+            event.description = row.e.description
+            event.start_date = row.e.start_date
+            event.duration_in_minutes = row.e.duration_in_minutes
+            event.price = row.e.price
+            event.max_assistance = row.e.max_assistance
+            event.tags = row.t.name
+            creator_user.id = row.u.id
+            creator_user.username = row.u.username
+            creator_user.first_name = row.u.first_name
+            creator_user.last_name = row.u.last_name
+            event_categories.id = row.ec.id
+            event_categories.name = row.ec.name
+            event_location.name = row.el.name
+            event_location.full_address = row.el.full_address
+            event_location.latitude = row.el.latitude
+            el.name, el.full_address, el.latitude, el.longitude, el.max_capacity 
+        })
+
         return{
-            collection: result,
-            pagination: {
+            collection: parsedDB,
+            pagination: {                
                 limit: pagaSize,
                 offset: requestedPage,
                 nextPage: "http://localhost:3000/event?limit=${pageSize}&offfset=$(requestedPage + 1)",
@@ -36,13 +69,6 @@ export class EventosRecolectar{
         return rta
     }
 
-    RecolectUsuario(first_name, last_name, username, attended, rating){
-        const sql = `SELECT id, username, first_name, last_name
-            FROM users 
-            JOIN event_enrolments ee ON users.id = ee, `
-
-    }
-
     ConsultaEvento(id){
         const sql = `SELECT e.id, e.name, e.description, e.stard_date, e.duration_in_minutes, e.price, e.enabled_for_enrollment, e.max_assistence , ec.full_address, ec.longitud, latitud, max_capacity
         FROM event e
@@ -52,22 +78,4 @@ export class EventosRecolectar{
         return rta
     }
 
-    autenticarUsuario(username, password){
-        const sql = `UPDATE username, password 
-        FROM users
-        `
-        //El profe lo tiene q explicar
-        const rta = Bd.Consulta(sql)
-        return rta
-    }
-
-    autenticarRegistro(first_name, last_name, username, password){
-        const sql = `UPDATE first_name, last_name, username, password 
-        FROM users
-        `
-        //El profe lo tiene q explicar
-        const rta = Bd.Consulta(sql)
-        return rta
-    }
-
-}
+}    
