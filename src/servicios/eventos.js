@@ -54,7 +54,7 @@ export class EventosServicios{
         JOIN event_tags et ON e.id = et.id_event
         JOIN tags t ON et.id_tag = t.id
         JOIN event_location el ON e.id_envet_location = el.id
-        WHERE e.name = '${categorias.name}' AND ec.name = '${categorias.category}' AND e.start_date = '${categorias.startDate}' AND t.name = '${categorias.tag}`;
+        WHERE e.name = '${name}' AND ec.name = '${category}' AND e.start_date = '${startDate}' AND t.name = '${tag}`;
         const result = Bd.Consulta(sql)        
         var event = new Object();
         var creator_user = new Object();
@@ -116,7 +116,7 @@ export class EventosServicios{
 
     CrearEjercicio8Eventos(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user){
         const sql = `INSERT INTO events (id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user) 
-        values '${id}', '${name}', '${full_name}', '${latitude}', '${longitude}', '${display_order}'`;
+        values ('${id}', '${name}', '${description}', '${id_event_category}', '${id_envet_location}', '${start_date}', '${duration_in_minutes}', '${price}', '${enabled_for_enrollment}', '${max_assistance}', '${id_creator_user}')`;
         try{
             Bd.Consulta(sql)
             return("Evento creado efectivamente")
@@ -127,9 +127,8 @@ export class EventosServicios{
     }
     
     EditarEjercicio8Eventos(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user){
-        const sql = `UPDATE id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user
-        FROM events 
-        WHERE id = '${id}'`
+        const sql = `UPDATE event SET id = '${id}', name = '${name}', description = '${description}', id_event_category = '${id_event_category}', id_envet_location = '${id_envet_location}', start_date = '${start_date}', duration_in_minutes = '${duration_in_minutes}', price = '${price}', enabled_for_enrollment = '${enabled_for_enrollment}', max_assistance = '${max_assistance}' 
+        WHERE id = '${id}' AND id_creator_user = '${id_creator_user}'`
         try{
             Bd.Consulta(sql)
             return("Evento editado efectivamente")
@@ -139,10 +138,10 @@ export class EventosServicios{
         }
     }
 
-    EliminarEjercicio8(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user){
+    EliminarEjercicio8Eventos(id, id_creator_user){
         const sql = `DELETE * 
         FROM events 
-        WHERE id = '${id}'`
+        WHERE id = '${id}' AND id_creator_user = '${id_creator_user}'`
         try{
             Bd.Consulta(sql)
             return("Evento borrado efectivamente")

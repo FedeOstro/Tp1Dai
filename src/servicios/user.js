@@ -24,4 +24,8 @@ export class UsuarioServicios{
             JOIN event_enrolments ee ON users.id = ee, `
     }
 
+    verificarInscripcion(enabled_for_enrollment, id_event, max_assistance){
+        
+    }
+
 }

@@ -40,7 +40,7 @@ router.get("/:id", (request, response) => {
     }
 })
 
-router.get("/:id/creation_event", (request, response) => {
+router.post("/:id/creation_event", (request, response) => {
     try{
         const confirmacion = EventosServicios.CrearEjercicio8(request.params.id)
         return response.json(confirmacion)
@@ -50,13 +50,32 @@ router.get("/:id/creation_event", (request, response) => {
     }
 })
 
-router.get("/:id/edition_event", (request, response) => {
-    const 
+router.put("/:id/:id_creator_user/edition_event", (request, response) => {
+    const name = request.query.name
+    const description = request.query.description
+    const id_event_category = request.query.id_event_category
+    const id_envet_location = request.query.id_envet_location
+    const start_date = request.query.start_date
+    const duration_in_minutes = request.query.duration_in_minutes
+    const price = request.query.price
+    const enabled_for_enrollment = request.query.enabled_for_enrollment
+    const max_assistance = request.query.max_assistance
     try{
-        const confirmacion = EventosServicios.EditarEjercicio8Eventos(request.params.id)
+        const confirmacion = EventosServicios.EditarEjercicio8Eventos(request.params.id, request.params.id_creator_user, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance)
+        return response.json(confirmacion)
     } catch(error){
         console.log("Error en edicion de eventos controller")
         return response.json("Error en edicion de eventos")
+    }
+})
+
+router.delete("/:id/:id_creator_user/delete_event", (request, response) => {
+    try{
+        const confirmacion = EventosServicios.EliminarEjercicio8Eventos(request.params.id, request.params.id_creator_user)
+        return response.json(confirmacion)
+    }catch(error){
+        console.log("Error en el delete eventos")
+        return response.json("Errro en borrado de evento")
     }
 })
 

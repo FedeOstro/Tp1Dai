@@ -42,10 +42,11 @@ router.get("/user/register", (request, response) =>{
 })
 
 router.get("/user/register", (request, response) =>{
-    const enabled_for_enrollment = reques.query.enabled_for_enrollment
-    const 
+    const enabled_for_enrollment = request.query.enabled_for_enrollment
+    const id_event = request.query.id_event
+    const max_assistance = request.query.max_assistance
     try{
-        const verificarInscripcion = EventosServicios.verificarInscripcion()
+        const verificarInscripcion = EventosServicios.verificarInscripcion(enabled_for_enrollment, id_event, max_assistance)
         return response.json(verificarInscripcion)
     }catch(error){
         console.log("Ejercicio 9")
