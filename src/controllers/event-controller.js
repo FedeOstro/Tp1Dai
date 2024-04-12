@@ -40,9 +40,33 @@ router.get("/:id", (request, response) => {
     }
 })
 
-router.post("/:id/creation_event", (request, response) => {
+router.get("/:id/enrollment", (request, respose) => {
+    const first_name = request.query.first_name
+    const last_name = request.query.last_name
+    const username = request.query.username
+    const attended = request.query.attended
+    const rating = request.query.rating
     try{
-        const confirmacion = EventosServicios.CrearEjercicio8(request.params.id)
+        
+    }catch(error){
+
+    }
+})
+
+router.post("/creation_event", (request, response) => {
+    const id = request.query.id
+    const name = request.name.id
+    const description = request.description.id
+    const id_event_category = request.id_event_category.id
+    const id_envet_location = request.id_envet_location.id
+    const start_date = request.start_date.id
+    const duration_in_minutes = request.duration_in_minutes.id
+    const price = request.price.id
+    const enabled_for_enrollment = request.enabled_for_enrollment.id
+    const max_assistance = request.max_assistance.id
+    const id_creator_user = request.id_creator_user.id
+    try{
+        const confirmacion = EventosServicios.CrearEjercicio8(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user)
         return response.json(confirmacion)
     } catch(error){
         console.log("Error en creacion de eventos controller")
@@ -79,6 +103,15 @@ router.delete("/:id/:id_creator_user/delete_event", (request, response) => {
     }
 })
 
-
+router.get("/:id/enrrolment", (request, response) =>{
+    
+    try{
+        const verificarInscripcion = EventosServicios.verificarInscripcion(enabled_for_enrollment, id_event, max_assistance)
+        return response.json(verificarInscripcion)
+    }catch(error){
+        console.log("Ejercicio 9")
+        return response.json("Ejercicio 9")
+    }
+})
 
 export default router;

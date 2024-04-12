@@ -15,9 +15,9 @@ export class EventosServicios{
         var event_categories  = new Object();
         var event_location = new Object();
         parsedDB = result.map(row => {
-            event.id = row.e.id
-            event.name = row.e.name
-            event.description = row.e.description
+            event.id = 1 
+            event.name = "Concierto 1"
+            event.description = ""
             event.start_date = row.e.start_date
             event.duration_in_minutes = row.e.duration_in_minutes
             event.price = row.e.price
@@ -38,7 +38,7 @@ export class EventosServicios{
         return{
             collection: parsedDB,
             pagination: {                
-                limit: pagaSize,
+                limit: pageSize,
                 offset: requestedPage,
                 nextPage: "http://localhost:3000/event?limit=${pageSize}&offfset=$(requestedPage + 1)",
             },
@@ -111,6 +111,27 @@ export class EventosServicios{
         })
         return{
             collection: paresedDB,
+        };
+    }
+
+    ListadoParticiPantes(id, first_name, last_name, username, attended, rating){
+        const sql = `SELECT u.id, u.username, u.first_name, u.last_name, ee.attended, ee.rating, ee.description 
+        FROM users 
+        JOIN event_enrollments ee ON u.id = ee.id_user
+        WHERE u.id = '${id}' AND u.username = '${username}' AND u.first_name = '${first_name}' AND u.last_name = '${last_name}' AND ee.attended = '${attended}' AND ee.rating = '${rating}'`
+        const result = Bd.Consulta(sql)
+        var user = new Object();
+        parsedDB = result.map(row => {
+            user.id = row.u.id
+            user.username = row.u.username
+            user.first_name = row.u.first_name
+            user.last_name = row.u.last_name
+            row.ee.attended
+            row.ee.rating
+            row.ee.description
+        })
+        return{
+            collection: parsedDB,
         };
     }
 

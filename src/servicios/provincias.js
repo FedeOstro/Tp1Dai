@@ -2,19 +2,23 @@ import { Bd } from "../repositories/provincias-repositories";
 
 export class ProvinciasServicios{
     
-    ObtencionProvincias(){
+    ObtencionProvincias(pageSize, requestedPage){
         const sql = `SELECT * from provinces`
-        try{
-            const provincias = Bd.Consulta(sql)
-            return provincias
-        }catch(error){
-            console.log("Error en Obtencion de provincias servicio")
-            return response.json("Error obtencion de provincias")
+        const provincias = Bd.Consulta(sql)
+        return{
+            collection: provincias,
+            pagination: {                
+                limit: pageSize,
+                offset: requestedPage,
+                nextPage: "http://localhost:3000/event?limit=${pageSize}&offfset=$(requestedPage + 1)",
+            },
         }
     }
 
     ObtencionProvinciasID(id){
         const sql = `SELECT * from provinces WHERE id = ${id}`
+        const provincia = Bd.Consulta(sql)
+        return provincia
     }
 
     CrearEjercicio7Provincias(id, name, full_name, latitude, longitude, display_order){
@@ -29,7 +33,7 @@ export class ProvinciasServicios{
         }
     }
     
-    EditarEjercicio7(id, name, full_name, latitude, longitude, display_order){
+    EditarEjercicio7Provincia(id, name, full_name, latitude, longitude, display_order){
         const sql = `UPDATE provinces SET name = '${name}', full_name = '${full_name}', latitude = '${latitude}', longitude = '${longitude}', display_order = '${display_order}' 
         WHERE id = '${id}'`
         try{
@@ -41,7 +45,7 @@ export class ProvinciasServicios{
         }
     }
 
-    EliminarEjercicio7(id){
+    EliminarEjercicio7Provincia(id){
         const sql = `DELETE * 
         FROM provinces 
         WHERE id = '${id}'`
