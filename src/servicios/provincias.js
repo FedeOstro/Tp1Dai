@@ -14,7 +14,7 @@ export class ProvinciasServicios{
     }
 
     EliminarEjercicio7(id, name, full_name, latitude, longitude, display_order){
-        const sql = `DELATE * 
+        const sql = `DELETE * 
         FROM provinces 
         WHERE id = '${id}'`
     }

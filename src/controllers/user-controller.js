@@ -40,3 +40,15 @@ router.get("/user/register", (request, response) =>{
         return response.json("Ejercicio 6 register")
     }
 })
+
+router.get("/user/register", (request, response) =>{
+    const enabled_for_enrollment = reques.query.enabled_for_enrollment
+    const 
+    try{
+        const verificarInscripcion = EventosServicios.verificarInscripcion()
+        return response.json(verificarInscripcion)
+    }catch(error){
+        console.log("Ejercicio 9")
+        return response.json("Ejercicio 9")
+    }
+})
