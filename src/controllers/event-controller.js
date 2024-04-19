@@ -1,4 +1,7 @@
-import { EventosServicios} from "../servicios/eventos.js";    
+import express from "express"
+import EventosServicios from "../servicios/eventos.js";    
+const router = express.Router()
+const eventService = new EventosServicios();
 
 router.get("/",  (request, response) => {
     const limit = request.query.limit;
@@ -9,15 +12,15 @@ router.get("/",  (request, response) => {
     const tag = request.query.tag;
     if(limit != null || offset != null){
         try {
-            const todoseventos = EventosServicios.getAllEvent(limit, offset);
+            const todoseventos = eventService.getAllEvent(limit, offset);
             return response.json(todoseventos);
-        } catch(error){
+        }catch(error){
             console.log("Error ej2 controller");
-            return response.json("Erro ej2 controller");
+            return response.json("Error ej2 controller");
         }
     }else if(name != null || category != null || startDate != null || tag != null){
         try {
-            const BusquedaEvent = EventosServicios.BusquedaEvent(name, category, startDate, tag);
+            const BusquedaEvent = eventService.BusquedaEvent(name, category, startDate, tag);
             return response.json(BusquedaEvent);
         } catch(error){
             console.log("Ej 3 controller")
@@ -25,6 +28,7 @@ router.get("/",  (request, response) => {
         }
     }else{
         console.log("error endpoint /")
+        return response.json("Faltan variables para la busqueda")
     }
     
 })
@@ -116,9 +120,5 @@ router.delete("/:id/:id_creator_user/delete_event", (request, response) => {
         return response.json("Errro en borrado de evento")
     }
 })
-
-
-
-
 
 export default router;

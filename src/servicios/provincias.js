@@ -1,6 +1,6 @@
-import { Bd } from "../repositories/provincias-repositories";
+import Bd from "../repositories/provincias-repositories.js";
 
-export class ProvinciasServicios{
+export default class ProvinciasServicios{
     
     ObtencionProvincias(pageSize, requestedPage){
         //const sql = `SELECT * from provinces`

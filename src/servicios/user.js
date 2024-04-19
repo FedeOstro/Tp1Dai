@@ -1,6 +1,6 @@
-import { Bd } from "../repositories/user-repositories";
+import Bd from "../repositories/user-repositories.js";
 
-export class UsuarioServicios{
+export default class UsuarioServicios{
 
     autenticarUsuario(username, password){
         const sql = `UPDATE username, password 

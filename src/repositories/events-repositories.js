@@ -1,10 +1,10 @@
 import pg from 'pg';
-import { bdconfig } from '../../BD_Config';
+//import { bdconfig } from '../../BD_Config';
 
-const client = new pg.Client(DBConfig);
-clinet.connect();
+//const client = new pg.Client(DBConfig);
+//client.connect();
 
-export class Bd{
+export default class Bd{
     async Consulta1(pageSize, requestedPage) {
         const sql = `SELECT e.id, e.name, e.description, e.start_date, e.duration_in_minutes, e.price, e.enabled_for_enrollment, e.max_assistance, t.name, u.id, u.username, u.first_name, u.last_name,ec.id, ec.name, el.id, el.name, el.full_address, el.latitude, el.longitude, el.max_capacity  
         FROM event e    

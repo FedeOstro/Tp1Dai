@@ -1,6 +1,7 @@
-import { Bd } from "../repositories/events-repositories";
+import Bd  from "../repositories/events-repositories.js";
 
-export class EventosServicios{
+export default class EventosServicios{
+
     getAllEvent(pageSize, requestedPage){
         //const result = Bd.Consulta1(pageSize, requestedPage);
         var event = new Object();
@@ -39,10 +40,35 @@ export class EventosServicios{
 
     }
 
-    verificarDatosEvento(){
-        
-    }
+   
+//     validarEvento(event_id, event_name, event_description, event_start_date, event_duration_in_minutes) {
+//         if (event.id <= 0 || typeof event.name !== 'string' || typeof event.description !== 'string' || !(event.start_date instanceof Date) 
+//         || event.duration_in_minutes <= 0 || event.price <= 0 || event.max_assistance <= 0 || event.tags <= 0) 
+//         {
+//             return "Error. Lo";
 
+//                             }
+        
+//         if (creator_user.id <= 0 || typeof creator_user.username !== 'string' || typeof creator_user.first_name !== 'string' || typeof creator_user.last_name !== 'string') {
+//             return false;
+//         }else{
+// "Error. Los dataos de eveusuario son correctos"
+//         }
+        
+//         if (event_categories.id <= 0 || typeof event_categories.name !== 'string') {
+//             return false;
+//         }else{
+// "Error. Los dataos de evecategoria son correctos"
+//         }
+        
+//         if (typeof event_location.name !== 'string' || typeof event_location.full_address !== 'string' || event_location.max_capacity <= 0) {
+//             return false;
+//         }else{
+// "Error. Los dataos de evelocalizacu son correctos"
+//         }
+  
+//     }
+        
     BusquedaEvento(name, category, startDate, tag){
         //const result = Bd.Consulta2(name, category, startDate, tag)        
         var event = new Object();

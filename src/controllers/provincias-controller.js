@@ -1,5 +1,6 @@
-import { ProvinciasServicios } from "../servicios/provincias";
-import router from "./event-controller";
+import express from "express"
+import ProvinciasServicios from "../servicios/provincias.js";
+const router = express.Router()
 
 router.get("/", (request, response) =>{
     const id = request.query.id;
@@ -66,3 +67,5 @@ router.delete("/:id/elimination_province", (request, respose) => {
         return respose.json("Error en la eliminacion de provincia")
     }
 })
+
+export default router
