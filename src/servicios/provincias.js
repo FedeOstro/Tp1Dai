@@ -3,8 +3,8 @@ import { Bd } from "../repositories/provincias-repositories";
 export class ProvinciasServicios{
     
     ObtencionProvincias(pageSize, requestedPage){
-        const sql = `SELECT * from provinces`
-        const provincias = Bd.Consulta(sql)
+        //const sql = `SELECT * from provinces`
+        const provincias = Bd.Consulta1(sql)
         return{
             collection: provincias,
             pagination: {                
@@ -16,16 +16,13 @@ export class ProvinciasServicios{
     }
 
     ObtencionProvinciasID(id){
-        const sql = `SELECT * from provinces WHERE id = ${id}`
-        const provincia = Bd.Consulta(sql)
+        //const provincia = Bd.Consulta2(id)
         return provincia
     }
 
     CrearEjercicio7Provincias(id, name, full_name, latitude, longitude, display_order){
-        const sql = `INSERT INTO provinces (id, name, full_name, latitude, longitude, display_order) 
-        values (${id}, ${name}, ${full_name}, ${latitude}, ${longitude}, ${display_order})`
         try{
-            Bd.Consulta(sql)
+            //Bd.Consulta3(id, name, full_name, latitude, longitude, display_order)
             return("Provincia creada con exito")
         }catch(error){
             console.log("Error creacion de provincia servicio");
@@ -34,10 +31,8 @@ export class ProvinciasServicios{
     }
     
     EditarEjercicio7Provincia(id, name, full_name, latitude, longitude, display_order){
-        const sql = `UPDATE provinces SET name = '${name}', full_name = '${full_name}', latitude = '${latitude}', longitude = '${longitude}', display_order = '${display_order}' 
-        WHERE id = '${id}'`
         try{
-            Bd.Consulta(sql)
+            //Bd.Consulta(id, name, full_name, latitude, longitude, display_order)
             return("Provincia editada con exito")
         }catch(error){
             console.log("Error edicion de provincia servicio");
@@ -46,11 +41,8 @@ export class ProvinciasServicios{
     }
 
     EliminarEjercicio7Provincia(id){
-        const sql = `DELETE * 
-        FROM provinces 
-        WHERE id = '${id}'`
         try{
-            Bd.Consulta(sql)
+            //Bd.Consulta(id)
             return("Provincia eliminada con exito")
         }catch(error){
             console.log("Error eliminacion de provincia servicio");

@@ -18,14 +18,4 @@ export class UsuarioServicios{
         return rta
     }
 
-    RecolectUsuario(first_name, last_name, username, attended, rating){
-        const sql = `SELECT id, username, first_name, last_name
-            FROM users 
-            JOIN event_enrolments ee ON users.id = ee, `
-    }
-
-    verificarInscripcion(enabled_for_enrollment, id_event, max_assistance){
-        
-    }
-
 }

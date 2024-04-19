@@ -9,7 +9,7 @@ router.get("/",  (request, response) => {
     const tag = request.query.tag;
     if(limit != null || offset != null){
         try {
-            const todoseventos = EventosServicios.getAllEvent();
+            const todoseventos = EventosServicios.getAllEvent(limit, offset);
             return response.json(todoseventos);
         } catch(error){
             console.log("Error ej2 controller");
@@ -46,11 +46,25 @@ router.get("/:id/enrollment", (request, respose) => {
     const username = request.query.username
     const attended = request.query.attended
     const rating = request.query.rating
-    try{
-        
-    }catch(error){
-
+    if(first_name != null || last_name != null || username != null || attended != attended || attended != null || rating != null){
+        try{
+            const usuario = EventosServicios.ListadoParticiPantes(request.params.id, first_name, last_name, username, attended, rating)
+            return respose.json(usuario)
+        }catch(error){
+            console.log("Error ejercicio 5 controller")
+            return respose.json("No se encontro al usuario")
+        }
+    }else{
+        try{
+            const verificarInscripcion = EventosServicios.verificarInscripcion(request.params.id)
+            return response.json(verificarInscripcion)
+        }catch(error){
+            console.log("Error ejercicio 9 controller")
+            return response.json("No se puede inscribir al evento")
+        }
     }
+    
+    
 })
 
 router.post("/creation_event", (request, response) => {
@@ -103,15 +117,8 @@ router.delete("/:id/:id_creator_user/delete_event", (request, response) => {
     }
 })
 
-router.get("/:id/enrrolment", (request, response) =>{
-    
-    try{
-        const verificarInscripcion = EventosServicios.verificarInscripcion(enabled_for_enrollment, id_event, max_assistance)
-        return response.json(verificarInscripcion)
-    }catch(error){
-        console.log("Ejercicio 9")
-        return response.json("Ejercicio 9")
-    }
-})
+
+
+
 
 export default router;

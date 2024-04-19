@@ -57,7 +57,7 @@ router.post("/:id/edition_province", (request, response) => {
     }
 })
 
-router.delete("/:id/elimination_prvince", (request, respose) => {
+router.delete("/:id/elimination_province", (request, respose) => {
     try{
         const confirmacion = ProvinciasServicios.EliminarEjercicio7Provincia(request.params.id)
         return respose.json(confirmacion)

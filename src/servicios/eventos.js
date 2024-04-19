@@ -2,14 +2,7 @@ import { Bd } from "../repositories/events-repositories";
 
 export class EventosServicios{
     getAllEvent(pageSize, requestedPage){
-        const sql = `SELECT e.id, e.name, e.description, e.start_date, e.duration_in_minutes, e.price, e.enabled_for_enrollment, e.max_assistance, t.name, u.id, u.username, u.first_name, u.last_name,ec.id, ec.name, el.id, el.name, el.full_address, el.latitude, el.longitude, el.max_capacity  
-        FROM event e    
-        JOIN users u ON e.id_creator_user = u.id
-        JOIN event_categories ec ON e.id_event_category = ec.id
-        JOIN event_tags et ON e.id = et.id_event
-        JOIN tags t ON et.id_tag = t.id
-        JOIN event_location el ON e.id_envet_location = el.id limit  ${pageSize} offset ${requestedPage}`;
-        const result = Bd.Consulta(sql);
+        //const result = Bd.Consulta1(pageSize, requestedPage);
         var event = new Object();
         var creator_user = new Object();
         var event_categories  = new Object();
@@ -17,69 +10,65 @@ export class EventosServicios{
         parsedDB = result.map(row => {
             event.id = 1 
             event.name = "Concierto 1"
-            event.description = ""
-            event.start_date = row.e.start_date
-            event.duration_in_minutes = row.e.duration_in_minutes
-            event.price = row.e.price
-            event.max_assistance = row.e.max_assistance
-            event.tags = row.t.name
-            creator_user.id = row.u.id
-            creator_user.username = row.u.username
-            creator_user.first_name = row.u.first_name
-            creator_user.last_name = row.u.last_name
-            event_categories.id = row.ec.id
-            event_categories.name = row.ec.name
-            event_location.name = row.el.name
-            event_location.full_address = row.el.full_address
-            event_location.latitude = row.el.latitude
-            event_location.longitude = row.el.longitude
-            event_location.max_capacity = row.el.max_capacity
+            event.description = "El mejor concierto de la historia"
+            event.start_date = '8/7/2000'
+            event.duration_in_minutes = 120
+            event.price = 30000
+            event.max_assistance = 20000
+            event.tags = 1
+            creator_user.id = 1
+            creator_user.username = "Felipa Candado"
+            creator_user.first_name = "Felipa"
+            creator_user.last_name = "Candado"
+            event_categories.id = 1
+            event_categories.name = "un buen show"
+            event_location.name = "Ciudad Autonoma de Buenos Aires"
+            event_location.full_address = "Estadio River Plate"
+            event_location.latitude = -70,46546571
+            event_location.longitude = 54,44458347
+            event_location.max_capacity = 20000
         })
         return{
             collection: parsedDB,
             pagination: {                
                 limit: pageSize,
                 offset: requestedPage,
-                nextPage: "http://localhost:3000/event?limit=${pageSize}&offfset=$(requestedPage + 1)",
+                nextPage: "http://localhost:3000/event?limit=${pageSize}&offfset=${requestedPage + 1}",
             },
         };
 
     }
 
+    verificarDatosEvento(){
+        
+    }
+
     BusquedaEvento(name, category, startDate, tag){
-        const sql = `SELECT e.id, e.name, e.description, e.start_date, e.duration_in_minutes, e.price, e.enabled_for_enrollment, e.max_assistance, t.name, u.id, u.username, u.first_name, u.last_name,ec.id, ec.name, el.id, el.name, el.full_address, el.latitude, el.longitude, el.max_capacity  
-        FROM event e    
-        JOIN users u ON e.id_creator_user = u.id
-        JOIN event_categories ec ON e.id_event_category = ec.id
-        JOIN event_tags et ON e.id = et.id_event
-        JOIN tags t ON et.id_tag = t.id
-        JOIN event_location el ON e.id_envet_location = el.id
-        WHERE e.name = '${name}' AND ec.name = '${category}' AND e.start_date = '${startDate}' AND t.name = '${tag}`;
-        const result = Bd.Consulta(sql)        
+        //const result = Bd.Consulta2(name, category, startDate, tag)        
         var event = new Object();
         var creator_user = new Object();
         var event_categories  = new Object();
         var event_location = new Object();
         parsedDB = result.map(row => {
-            event.id = row.e.id
-            event.name = row.e.name
-            event.description = row.e.description
-            event.start_date = row.e.start_date
-            event.duration_in_minutes = row.e.duration_in_minutes
-            event.price = row.e.price
-            event.max_assistance = row.e.max_assistance
-            event.tags = row.t.name
-            creator_user.id = row.u.id
-            creator_user.username = row.u.username
-            creator_user.first_name = row.u.first_name
-            creator_user.last_name = row.u.last_name
-            event_categories.id = row.ec.id
-            event_categories.name = row.ec.name
-            event_location.name = row.el.name
-            event_location.full_address = row.el.full_address
-            event_location.latitude = row.el.latitude
-            event_location.longitude = row.el.longitude
-            event_location.max_capacity = row.el.max_capacity
+            event.id = 1
+            event.name = "concierto 2"
+            event.description = "el mejor show"
+            event.start_date = '7/4/2023'
+            event.duration_in_minutes = 180
+            event.price = 70000
+            event.max_assistance = 100000
+            event.tags = 2
+            creator_user.id = 2
+            creator_user.username = "FedeOstro"
+            creator_user.first_name = "Federico"
+            creator_user.last_name = "Ostrovsky"
+            event_categories.id = 2
+            event_categories.name = "el show"
+            event_location.name = "Ciudad Autonoma de Buenos Aires"
+            event_location.full_address = "Estadio de Boca Junior"
+            event_location.latitude = 80,454560
+            event_location.longitude = -10.54676
+            event_location.max_capacity = 100000
             })
         return{
             collection: parsedDB,
@@ -87,27 +76,23 @@ export class EventosServicios{
     }
 
     ConsultaEvento(id){
-        const sql = `SELECT e.id, e.name, e.description, e.stard_date, e.duration_in_minutes, e.price, e.enabled_for_enrollment, e.max_assistance , el.id_location, el.name, el.full_address, el.longitude, el.latitude, el.max_capacity
-        FROM event e
-        JOIN event_locations el ON e.id_event_locations = el.id
-        WHERE e.id = '${id}'`;
-        const result = Bd.Consulta(sql)
+        //const result = Bd.Consulta3(id)
         var event = new Object();
         var event_location = new Object();
         paresedDB = result.map(row => {
-            event.id = row.e.id
-            event.name = row.e.name
-            event.description = row.e.description
-            event.start_date = row.e.start_date
-            event.duration_in_minutes = row.e.duration_in_minutes
-            event.price = row.e.price
-            event.max_assistance = row.e.max_assistance
-            event_location.id_location = row.e.id_locations
-            event_location.name = row.e.name
-            event_location.full_address = row.e.full_address
-            event_location.longitude = row.e.longitude
-            event_location.latitude = row.e.latitude
-            event_location.max_capacity = row.e.max_capacity
+            event.id = 3
+            event.name = "concierto 3"
+            event.description = "el show del siglo"
+            event.start_date = '6/6/2022'
+            event.duration_in_minutes = 165
+            event.price = 56000
+            event.max_assistance = 50000
+            event_location.id_location = 3
+            event_location.name = "Ciudad Autonoma de Buenos Aires"
+            event_location.full_address = "Estadio de Independiente"
+            event_location.longitude = -15,5646546
+            event_location.latitude = 14,867979
+            event_location.max_capacity = 50000
         })
         return{
             collection: paresedDB,
@@ -115,20 +100,16 @@ export class EventosServicios{
     }
 
     ListadoParticiPantes(id, first_name, last_name, username, attended, rating){
-        const sql = `SELECT u.id, u.username, u.first_name, u.last_name, ee.attended, ee.rating, ee.description 
-        FROM users 
-        JOIN event_enrollments ee ON u.id = ee.id_user
-        WHERE u.id = '${id}' AND u.username = '${username}' AND u.first_name = '${first_name}' AND u.last_name = '${last_name}' AND ee.attended = '${attended}' AND ee.rating = '${rating}'`
-        const result = Bd.Consulta(sql)
+        //const result = Bd.Consulta4(id, first_name, last_name, username, attended, rating)
         var user = new Object();
         parsedDB = result.map(row => {
-            user.id = row.u.id
-            user.username = row.u.username
-            user.first_name = row.u.first_name
-            user.last_name = row.u.last_name
-            row.ee.attended
-            row.ee.rating
-            row.ee.description
+            user.id = 4
+            user.username = "SimonSuken"
+            user.first_name = "Simon"
+            user.last_name = "Suken"
+            row.ee.attended = true
+            row.ee.rating = 8
+            row.ee.description = "el show"
         })
         return{
             collection: parsedDB,
@@ -136,10 +117,8 @@ export class EventosServicios{
     }
 
     CrearEjercicio8Eventos(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user){
-        const sql = `INSERT INTO events (id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user) 
-        values ('${id}', '${name}', '${description}', '${id_event_category}', '${id_envet_location}', '${start_date}', '${duration_in_minutes}', '${price}', '${enabled_for_enrollment}', '${max_assistance}', '${id_creator_user}')`;
         try{
-            Bd.Consulta(sql)
+            //Bd.Consulta5(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user)
             return("Evento creado efectivamente")
         } catch(error){
             console.log("Error creacion de evento");
@@ -148,10 +127,8 @@ export class EventosServicios{
     }
     
     EditarEjercicio8Eventos(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user){
-        const sql = `UPDATE event SET id = '${id}', name = '${name}', description = '${description}', id_event_category = '${id_event_category}', id_envet_location = '${id_envet_location}', start_date = '${start_date}', duration_in_minutes = '${duration_in_minutes}', price = '${price}', enabled_for_enrollment = '${enabled_for_enrollment}', max_assistance = '${max_assistance}' 
-        WHERE id = '${id}' AND id_creator_user = '${id_creator_user}'`
         try{
-            Bd.Consulta(sql)
+            //Bd.Consulta6(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user)
             return("Evento editado efectivamente")
         } catch(error){
             console.log("Error edicion de evento");
@@ -160,11 +137,8 @@ export class EventosServicios{
     }
 
     EliminarEjercicio8Eventos(id, id_creator_user){
-        const sql = `DELETE * 
-        FROM events 
-        WHERE id = '${id}' AND id_creator_user = '${id_creator_user}'`
         try{
-            Bd.Consulta(sql)
+            //Bd.Consulta7(id, id_creator_user)
             return("Evento borrado efectivamente")
         } catch(error){
             console.log("Error borrado de evento");
