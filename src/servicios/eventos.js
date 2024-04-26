@@ -49,39 +49,39 @@ export default class EventosServicios{
         var creator_user = new Object();
         var event_categories  = new Object();
         var event_location = new Object();
-        /* const parsedDB = result.map(row => {
-            id = row.id
-            event.name = row.name
-            event.description = row.description
-            event.start_date = row.start_date
-            event.duration_in_minutes = row.duration_in_minutes
-            event.price = row.price
-            event.max_assistance = row.enabled_for_enrollment
-            event.tags = row.t.name
-            creator_user.id = 2
-            creator_user.username = "FedeOstro"
-            creator_user.first_name = "Federico"
-            creator_user.last_name = "Ostrovsky"
-            event_categories.id = 2
-            event_categories.name = "el show"
-            event_location.name = "Ciudad Autonoma de Buenos Aires"
-            event_location.full_address = "Estadio de Boca Junior"
-            event_location.latitude = 80,454560
-            event_location.longitude = -10.54676
-            event_location.max_capacity = 100000
-            }) */
-        return("Anda")
+        const parsedDB = {
+            id: 3,
+            name : "concierto 3",
+            description :"el show del siglo",
+            start_date : '2024-03-29 00:00:00',
+            duration_in_minutes : 133,
+            price : 321321,
+            max_assistance : 312,
+            tags : 'dad',
+            id : 2,
+            username : "FedeOstro",
+            first_name : "Federico",
+            last_name : "Ostrovsky",
+            id : 2,
+            name : "el show",
+            name : "Ciudad Autonoma de Buenos Aires",
+            full_address : "Estadio de Boca Junior",
+            latitude : 80454560,
+            longitude : -1054676,
+            max_capacity : 100000,
+        }
+        return(parsedDB)
     }
 
     ConsultaEvento(id){
         const result = bd.Consulta3(id)
         var event = new Object();
         var event_location = new Object();
-        paresedDB = result.map(row => {
+        /* paresedDB = result.map(row => {
             event.id = 3
             event.name = "concierto 3"
             event.description = "el show del siglo"
-            event.start_date = '6/6/2022'
+            event.start_date = '2024-03-29 00:00:00'
             event.duration_in_minutes = 165
             event.price = 56000
             event.max_assistance = 50000
@@ -91,7 +91,23 @@ export default class EventosServicios{
             event_location.longitude = -15,5646546
             event_location.latitude = 14,867979
             event_location.max_capacity = 50000
-        })
+        }) */
+
+        const paresedDB = {
+            id: 3,
+            name : "concierto 3",
+            description :"el show del siglo",
+            start_date : '2024-03-29 00:00:00',
+            duration_in_minutes : 165,
+            price : 56000,
+            max_assistance : 50000,
+            id_location : 3,
+            full_address : "Estadio de Independiente",
+            longitude : -155646546,
+            latitude : 14867979,
+            max_capacity : 50000,
+        }
+
         return{
             collection: paresedDB,
         };

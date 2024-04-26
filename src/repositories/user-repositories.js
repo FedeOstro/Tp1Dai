@@ -5,7 +5,7 @@ client.connect();
 
 export default class Bd{
     async Consulta(sql) {
-        const respuesta = await pool.request().query(sql);
+        const respuesta = await client.query(sql);
         return respuesta;
     }
     
