@@ -1,9 +1,11 @@
-import Bd  from "../repositories/events-repositories.js";
+import Bd from "../repositories/events-repositories.js";
+const bd = new Bd();
+
 
 export default class EventosServicios{
 
     getAllEvent(pageSize, requestedPage){
-        const result = Bd.Consulta1(pageSize, requestedPage);
+        const result = bd.Consulta1(pageSize, requestedPage);
         var event = new Object();
         var creator_user = new Object();
         var event_categories  = new Object();
@@ -39,53 +41,23 @@ export default class EventosServicios{
         };
 
     }
-
-   
-     validarEvento(event_id, event_name, event_description, event_start_date, event_duration_in_minutes) {
-         if (event.id <= 0 || typeof event.name !== 'string' || typeof event.description !== 'string' || !(event.start_date instanceof Date) 
-         || event.duration_in_minutes <= 0 || event.price <= 0 || event.max_assistance <= 0 || event.tags <= 0) 
-        {
-            return "Error. Lo";
-
-                             }
-        
-         if (creator_user.id <= 0 || typeof creator_user.username !== 'string' || typeof creator_user.first_name !== 'string' || typeof creator_user.last_name !== 'string') {
-             return false;
-         }else{
- "Error. Los dataos de eveusuario son correctos"
-         }
-        
-         if (event_categories.id <= 0 || typeof event_categories.name !== 'string') {
-             return false;
-         }else{
- "Error. Los dataos de evecategoria son correctos"
-         }
-        
-         if (typeof event_location.name !== 'string' || typeof event_location.full_address !== 'string' || event_location.max_capacity <= 0) {
-             return false;
-         }else{
- "Error. Los dataos de evelocalizacu son correctos"
-         }
-  
-     }
         
     BusquedaEvento(name, category, startDate, tag){
-        const result = Bd.Consulta2(name, category, startDate, tag)
+        const result = bd.Consulta2(name, category, startDate, tag)
         console.log(result)
         var event = new Object();
         var creator_user = new Object();
         var event_categories  = new Object();
         var event_location = new Object();
-        const parsedDB = result.map(row => {
-            event1 : 1,
+        /* const parsedDB = result.map(row => {
             id = row.id
-            event.name = "concierto 2"
-            event.description = "el mejor show"
-            event.start_date = '7/4/2023'
-            event.duration_in_minutes = 180
-            event.price = 70000
-            event.max_assistance = 100000
-            event.tags = 2
+            event.name = row.name
+            event.description = row.description
+            event.start_date = row.start_date
+            event.duration_in_minutes = row.duration_in_minutes
+            event.price = row.price
+            event.max_assistance = row.enabled_for_enrollment
+            event.tags = row.t.name
             creator_user.id = 2
             creator_user.username = "FedeOstro"
             creator_user.first_name = "Federico"
@@ -97,14 +69,12 @@ export default class EventosServicios{
             event_location.latitude = 80,454560
             event_location.longitude = -10.54676
             event_location.max_capacity = 100000
-            })
-        return{
-            collection: parsedDB,
-        };
+            }) */
+        return("Anda")
     }
 
     ConsultaEvento(id){
-        const result = Bd.Consulta3(id)
+        const result = bd.Consulta3(id)
         var event = new Object();
         var event_location = new Object();
         paresedDB = result.map(row => {
@@ -128,7 +98,7 @@ export default class EventosServicios{
     }
 
     ListadoParticiPantes(id, first_name, last_name, username, attended, rating){
-        const result = Bd.Consulta4(id, first_name, last_name, username, attended, rating)
+        const result = bd.Consulta4(id, first_name, last_name, username, attended, rating)
         var user = new Object();
         parsedDB = result.map(row => {
             user.id = 4
@@ -146,7 +116,7 @@ export default class EventosServicios{
 
     CrearEjercicio8Eventos(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user){
         try{
-            Bd.Consulta5(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user)
+            bd.Consulta5(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user)
             return("Evento creado efectivamente")
         } catch(error){
             console.log("Error creacion de evento");
@@ -156,7 +126,7 @@ export default class EventosServicios{
     
     EditarEjercicio8Eventos(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user){
         try{
-            Bd.Consulta6(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user)
+            bd.Consulta6(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user)
             return("Evento editado efectivamente")
         } catch(error){
             console.log("Error edicion de evento");
@@ -166,7 +136,7 @@ export default class EventosServicios{
 
     EliminarEjercicio8Eventos(id, id_creator_user){
         try{
-            Bd.Consulta7(id, id_creator_user)
+            bd.Consulta7(id, id_creator_user)
             return("Evento borrado efectivamente")
         } catch(error){
             console.log("Error borrado de evento");

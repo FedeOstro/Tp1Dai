@@ -1,7 +1,6 @@
 import pg from 'pg';
-import bdconfig from '../../BD_Config.js';
-let pool = await sql.connect(bdconfig)
-const client = new pg.Client(DBConfig);
+import { bdconfig } from './BD_Config.js';
+const client = new pg.Client(bdconfig);
 client.connect();
 
 export default class Bd{
