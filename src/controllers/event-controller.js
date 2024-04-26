@@ -20,11 +20,11 @@ router.get("/",  (request, response) => {
         }
     }else if(name != null || category != null || startDate != null || tag != null){
         try {
-            const BusquedaEvent = eventService.BusquedaEvent(name, category, startDate, tag);
+            const BusquedaEvent = eventService.BusquedaEvento(name, category, startDate, tag);
             return response.json(BusquedaEvent);
         } catch(error){
-            console.log("Ej 3 controller")
-            return response.json("Ej 3 controller")
+            console.log(error)
+            return response.json(error)
         }
     }else{
         console.log("error endpoint /")

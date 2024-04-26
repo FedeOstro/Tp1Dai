@@ -3,7 +3,7 @@ import Bd from "../repositories/provincias-repositories.js";
 export default class ProvinciasServicios{
     
     ObtencionProvincias(pageSize, requestedPage){
-        //const sql = `SELECT * from provinces`
+        const sql = `SELECT * from provinces`
         const provincias = Bd.Consulta1(sql)
         return{
             collection: provincias,
@@ -16,13 +16,13 @@ export default class ProvinciasServicios{
     }
 
     ObtencionProvinciasID(id){
-        //const provincia = Bd.Consulta2(id)
+        const provincia = Bd.Consulta2(id)
         return provincia
     }
 
     CrearEjercicio7Provincias(id, name, full_name, latitude, longitude, display_order){
         try{
-            //Bd.Consulta3(id, name, full_name, latitude, longitude, display_order)
+            Bd.Consulta3(id, name, full_name, latitude, longitude, display_order)
             return("Provincia creada con exito")
         }catch(error){
             console.log("Error creacion de provincia servicio");
@@ -32,7 +32,7 @@ export default class ProvinciasServicios{
     
     EditarEjercicio7Provincia(id, name, full_name, latitude, longitude, display_order){
         try{
-            //Bd.Consulta(id, name, full_name, latitude, longitude, display_order)
+            Bd.Consulta(id, name, full_name, latitude, longitude, display_order)
             return("Provincia editada con exito")
         }catch(error){
             console.log("Error edicion de provincia servicio");
@@ -42,7 +42,7 @@ export default class ProvinciasServicios{
 
     EliminarEjercicio7Provincia(id){
         try{
-            //Bd.Consulta(id)
+            Bd.Consulta(id)
             return("Provincia eliminada con exito")
         }catch(error){
             console.log("Error eliminacion de provincia servicio");
