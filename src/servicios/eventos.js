@@ -10,7 +10,7 @@ export default class EventosServicios{
         var creator_user = new Object();
         var event_categories  = new Object();
         var event_location = new Object();
-        parsedDB = result.map(row => {
+        /* parsedDB = result.map(row => {
             event.id = 1 
             event.name = "Concierto 1"
             event.description = "El mejor concierto de la historia"
@@ -30,7 +30,76 @@ export default class EventosServicios{
             event_location.latitude = -70,46546571
             event_location.longitude = 54,44458347
             event_location.max_capacity = 20000
-        })
+        }) */
+        const evento1 = {
+            id: 3,
+            name : "concierto 3",
+            description :"el show del siglo",
+            start_date : '2024-03-29 00:00:00',
+            duration_in_minutes : 133,
+            price : 321321,
+            max_assistance : 312,
+            tags : 'dad',
+            id : 2,
+            username : "FedeOstro",
+            first_name : "Federico",
+            last_name : "Ostrovsky",
+            id : 2,
+            name : "el show",
+            name : "Ciudad Autonoma de Buenos Aires",
+            full_address : "Estadio de Boca Junior",
+            latitude : 80454560,
+            longitude : -1054676,
+            max_capacity : 100000,
+            
+        }
+        const evento2 = {
+            id: 3,
+            name : "concierto 3",
+            description :"el show del siglo",
+            start_date : '2024-03-29 00:00:00',
+            duration_in_minutes : 133,
+            price : 321321,
+            max_assistance : 312,
+            tags : 'dad',
+            id : 2,
+            username : "FedeOstro",
+            first_name : "Federico",
+            last_name : "Ostrovsky",
+            id : 2,
+            name : "el show",
+            name : "Ciudad Autonoma de Buenos Aires",
+            full_address : "Estadio de Boca Junior",
+            latitude : 80454560,
+            longitude : -1054676,
+            max_capacity : 100000,
+            
+        }
+        const evento3 = {
+            id: 3,
+            name : "concierto 3",
+            description :"el show del siglo",
+            start_date : '2024-03-29 00:00:00',
+            duration_in_minutes : 133,
+            price : 321321,
+            max_assistance : 312,
+            tags : 'dad',
+            id : 2,
+            username : "FedeOstro",
+            first_name : "Federico",
+            last_name : "Ostrovsky",
+            id : 2,
+            name : "el show",
+            name : "Ciudad Autonoma de Buenos Aires",
+            full_address : "Estadio de Boca Junior",
+            latitude : 80454560,
+            longitude : -1054676,
+            max_capacity : 100000,
+            
+        }
+        const parsedDB = {
+            evento1, evento2, evento3
+        }
         return{
             collection: parsedDB,
             pagination: {                
@@ -116,7 +185,7 @@ export default class EventosServicios{
     ListadoParticiPantes(id, first_name, last_name, username, attended, rating){
         const result = bd.Consulta4(id, first_name, last_name, username, attended, rating)
         var user = new Object();
-        parsedDB = result.map(row => {
+        /* parsedDB = result.map(row => {
             user.id = 4
             user.username = "SimonSuken"
             user.first_name = "Simon"
@@ -124,15 +193,25 @@ export default class EventosServicios{
             row.ee.attended = true
             row.ee.rating = 8
             row.ee.description = "el show"
-        })
+        }) */
+        const parsedDB = {
+            id: 1,
+            username: "Sim",
+            first_name: "s",
+            last_name: "dad",
+            attended: true,
+            rating: 3,
+            description: "qsy"
+        }
         return{
             collection: parsedDB,
         };
     }
 
     CrearEjercicio8Eventos(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user){
+        return("Evento creado efectivamente")
         try{
-            bd.Consulta5(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user)
+            //bd.Consulta5(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user)
             return("Evento creado efectivamente")
         } catch(error){
             console.log("Error creacion de evento");
@@ -141,8 +220,9 @@ export default class EventosServicios{
     }
     
     EditarEjercicio8Eventos(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user){
+        return("Evento editado efectivamente")
         try{
-            bd.Consulta6(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user)
+            //bd.Consulta6(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user)
             return("Evento editado efectivamente")
         } catch(error){
             console.log("Error edicion de evento");
@@ -151,8 +231,9 @@ export default class EventosServicios{
     }
 
     EliminarEjercicio8Eventos(id, id_creator_user){
+        return("Evento borrado efectivamente")
         try{
-            bd.Consulta7(id, id_creator_user)
+            //bd.Consulta7(id, id_creator_user)
             return("Evento borrado efectivamente")
         } catch(error){
             console.log("Error borrado de evento");

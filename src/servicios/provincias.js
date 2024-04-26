@@ -5,8 +5,32 @@ export default class ProvinciasServicios{
     ObtencionProvincias(pageSize, requestedPage){
         const sql = `SELECT * from provinces`
         const provincias = Bd.Consulta1(sql)
+        const provincias1 = {
+            name: "dad",
+            full_name: "DD",
+            latitude: 424,
+            longitude: 4555,
+            display_order: 52,
+        }
+        const provincias2 = {
+            name: "dad",
+            full_name: "DD",
+            latitude: 424,
+            longitude: 4555,
+            display_order: 52,
+        }
+        const provincias3 = {
+            name: "dad",
+            full_name: "DD",
+            latitude: 424,
+            longitude: 4555,
+            display_order: 52,
+        }
+        const provinciasss = {
+            provincias1, provincias2, provincias3,
+        }
         return{
-            collection: provincias,
+            collection: provinciasss,
             pagination: {                
                 limit: pageSize,
                 offset: requestedPage,
@@ -17,10 +41,18 @@ export default class ProvinciasServicios{
 
     ObtencionProvinciasID(id){
         const provincia = Bd.Consulta2(id)
-        return provincia
+        const provincias1 = {
+            name: "dad",
+            full_name: "DD",
+            latitude: 424,
+            longitude: 4555,
+            display_order: 52,
+        }
+        return provincias1
     }
 
     CrearEjercicio7Provincias(id, name, full_name, latitude, longitude, display_order){
+        return("Provincia creada con exito")
         try{
             Bd.Consulta3(id, name, full_name, latitude, longitude, display_order)
             return("Provincia creada con exito")
@@ -31,6 +63,7 @@ export default class ProvinciasServicios{
     }
     
     EditarEjercicio7Provincia(id, name, full_name, latitude, longitude, display_order){
+        return("Provincia editada con exito")
         try{
             Bd.Consulta(id, name, full_name, latitude, longitude, display_order)
             return("Provincia editada con exito")
@@ -41,6 +74,7 @@ export default class ProvinciasServicios{
     }
 
     EliminarEjercicio7Provincia(id){
+        return("Provincia eliminada con exito")
         try{
             Bd.Consulta(id)
             return("Provincia eliminada con exito")
