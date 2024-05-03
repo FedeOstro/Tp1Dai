@@ -28,15 +28,14 @@ router.get("/", (request, response) =>{
     }
 })
 
-router.post("/creation_province", (request, response) => {
-    const id = request.query.id;
+router.post("/:id", (request, response) => {
     const name = request.name.id;
-    const full_name = request.query.full_name;
-    const latitude = request.query.latitude;
-    const longitude = request.query.longitude;
-    const display_order = request.query.display_order;
+    const full_name = request.body.full_name;
+    const latitude = request.body.latitude;
+    const longitude = request.body.longitude;
+    const display_order = request.body.display_order;
     try{
-        const confirmacion = ProvinciasServicios.CrearEjercicio7Provincias(id, name, full_name, latitude, longitude, display_order)
+        const confirmacion = ProvinciasServicios.CrearEjercicio7Provincias(request.params.id, name, full_name, latitude, longitude, display_order)
         return response.json(confirmacion)
     }catch(error){
         console.log("Error en creacion de provincias")
@@ -44,12 +43,12 @@ router.post("/creation_province", (request, response) => {
     }
 })
 
-router.post("/:id/edition_province", (request, response) => {
-    const name = request.query.name;
-    const full_name = request.query.full_name;
-    const latitude = request.query.latitude;
-    const longitude = request.query.longitude;
-    const display_order = request.query.display_order;
+router.put("/:id", (request, response) => {
+    const name = request.body.name;
+    const full_name = request.body.full_name;
+    const latitude = request.body.latitude;
+    const longitude = request.body.longitude;
+    const display_order = request.body.display_order;
     try{
         const confirmacion = ProvinciasServicios.EditarEjercicio7Provincia(request.params.id, name, full_name, latitude, longitude, display_order)
         return response.json(confirmacion)
@@ -58,7 +57,7 @@ router.post("/:id/edition_province", (request, response) => {
     }
 })
 
-router.delete("/:id/elimination_province", (request, respose) => {
+router.delete("/:id", (request, respose) => {
     try{
         const confirmacion = ProvinciasServicios.EliminarEjercicio7Provincia(request.params.id)
         return respose.json(confirmacion)

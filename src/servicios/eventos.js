@@ -5,140 +5,82 @@ const bd = new Bd();
 export default class EventosServicios{
 
     getAllEvent(pageSize, requestedPage){
-        const result = bd.Consulta1(pageSize, requestedPage);
+        const pageSizes = parsedLimit(pageSize)
+        const requestedPages = parsedOffset(requestedPage)
+        const result = bd.Consulta1(pageSizes, requestedPages);
         var event = new Object();
         var creator_user = new Object();
         var event_categories  = new Object();
         var event_location = new Object();
-        /* parsedDB = result.map(row => {
-            event.id = 1 
-            event.name = "Concierto 1"
-            event.description = "El mejor concierto de la historia"
-            event.start_date = '8/7/2000'
-            event.duration_in_minutes = 120
-            event.price = 30000
-            event.max_assistance = 20000
-            event.tags = 1
-            creator_user.id = 1
-            creator_user.username = "Felipa Candado"
-            creator_user.first_name = "Felipa"
-            creator_user.last_name = "Candado"
-            event_categories.id = 1
-            event_categories.name = "un buen show"
-            event_location.name = "Ciudad Autonoma de Buenos Aires"
-            event_location.full_address = "Estadio River Plate"
-            event_location.latitude = -70,46546571
-            event_location.longitude = 54,44458347
-            event_location.max_capacity = 20000
-        }) */
-        const evento1 = {
-            id: 3,
-            name : "concierto 3",
-            description :"el show del siglo",
-            start_date : '2024-03-29 00:00:00',
-            duration_in_minutes : 133,
-            price : 321321,
-            max_assistance : 312,
-            tags : 'dad',
-            id : 2,
-            username : "FedeOstro",
-            first_name : "Federico",
-            last_name : "Ostrovsky",
-            id : 2,
-            name : "el show",
-            name : "Ciudad Autonoma de Buenos Aires",
-            full_address : "Estadio de Boca Junior",
-            latitude : 80454560,
-            longitude : -1054676,
-            max_capacity : 100000,
-            
-        }
-        const evento2 = {
-            id: 3,
-            name : "concierto 3",
-            description :"el show del siglo",
-            start_date : '2024-03-29 00:00:00',
-            duration_in_minutes : 133,
-            price : 321321,
-            max_assistance : 312,
-            tags : 'dad',
-            id : 2,
-            username : "FedeOstro",
-            first_name : "Federico",
-            last_name : "Ostrovsky",
-            id : 2,
-            name : "el show",
-            name : "Ciudad Autonoma de Buenos Aires",
-            full_address : "Estadio de Boca Junior",
-            latitude : 80454560,
-            longitude : -1054676,
-            max_capacity : 100000,
-            
-        }
-        const evento3 = {
-            id: 3,
-            name : "concierto 3",
-            description :"el show del siglo",
-            start_date : '2024-03-29 00:00:00',
-            duration_in_minutes : 133,
-            price : 321321,
-            max_assistance : 312,
-            tags : 'dad',
-            id : 2,
-            username : "FedeOstro",
-            first_name : "Federico",
-            last_name : "Ostrovsky",
-            id : 2,
-            name : "el show",
-            name : "Ciudad Autonoma de Buenos Aires",
-            full_address : "Estadio de Boca Junior",
-            latitude : 80454560,
-            longitude : -1054676,
-            max_capacity : 100000,
-            
-        }
-        const parsedDB = {
-            evento1, evento2, evento3
-        }
+        parsedDB = result.map(row => {
+            event.id = row.id
+            event.name = row.name
+            event.description = row.description
+            event.start_date = row.start_date
+            event.duration_in_minutes = row.duration_in_minutes
+            event.price = row.price
+            event.enabled_for_enrollment = row.enabled_for_enrollment
+            event.max_assistance = row.max_assistance
+            event.tags = row.tags_name
+            creator_user.id = row.user_id
+            creator_user.username = row.username
+            creator_user.first_name = row.first_name
+            creator_user.last_name = row.last_name
+            event_categories.id = row.eventcat_id
+            event_categories.name = row.eventcat_name
+            event_location.id = row.el_id
+            event_location.name = row.el_name
+            event_location.full_address = row.full_address
+            event_location.latitude = row.latitude
+            event_location.longitude = row.longitude
+            event_location.max_capacity = row.max_assistance
+        })
         return{
             collection: parsedDB,
-            pagination: {                
+            pagination: {
                 limit: pageSize,
                 offset: requestedPage,
-                nextPage: "http://localhost:3000/event?limit=${pageSize}&offfset=${requestedPage + 1}",
-            },
-        };
-
+                nextPage: ((parsedOffset + 1) * parsedLimit <= totalCount) ? `${process.env.BASE_URL}/${path}?limit=${parsedLimit}&offset=${parsedOffset + 1}${(eventName) ? `&eventName=${eventName}` : null}${(eventCategory) ? `&eventCategory=${eventCategory}` : null} ${(eventDate) ? `&eventDate=${eventDate}` : null}${(eventTag) ? `&eventTag=${eventTag}` : null}` : null,
+                total: totalCount,   
+            }
+        } 
     }
-        
-    BusquedaEvento(name, category, startDate, tag){
-        const result = bd.Consulta2(name, category, startDate, tag)
+         
+ 
+
+ 
+    async BusquedaEvento(name, category, startDate, tag){
+        console.log("pre query")
+        const result = await bd.Consulta2(name, category, startDate, tag)
+        console.log("post query")
         console.log(result)
         var event = new Object();
         var creator_user = new Object();
         var event_categories  = new Object();
         var event_location = new Object();
-        const parsedDB = {
-            id: 3,
-            name : "concierto 3",
-            description :"el show del siglo",
-            start_date : '2024-03-29 00:00:00',
-            duration_in_minutes : 133,
-            price : 321321,
-            max_assistance : 312,
-            tags : 'dad',
-            id : 2,
-            username : "FedeOstro",
-            first_name : "Federico",
-            last_name : "Ostrovsky",
-            id : 2,
-            name : "el show",
-            name : "Ciudad Autonoma de Buenos Aires",
-            full_address : "Estadio de Boca Junior",
-            latitude : 80454560,
-            longitude : -1054676,
-            max_capacity : 100000,
-        }
+        parsedDB = result.map(row => {
+            event.id = row.id
+            event.name = row.name
+            event.description = row.description
+            event.start_date = row.start_date
+            event.duration_in_minutes = row.duration_in_minutes
+            event.price = row.price
+            event.enabled_for_enrollment = row.enabled_for_enrollment
+            event.max_assistance = row.max_assistance
+            event.tags = row.tags_name
+            creator_user.id = row.user_id
+            creator_user.username = row.username
+            creator_user.first_name = row.first_name
+            creator_user.last_name = row.last_name
+            event_categories.id = row.eventcat_id
+            event_categories.name = row.eventcat_name
+            event_location.id = row.el_id
+            event_location.name = row.el_name
+            event_location.full_address = row.full_address
+            event_location.latitude = row.latitude
+            event_location.longitude = row.longitude
+            event_location.max_capacity = row.max_assistance
+        })
         return(parsedDB)
     }
 
@@ -146,37 +88,21 @@ export default class EventosServicios{
         const result = bd.Consulta3(id)
         var event = new Object();
         var event_location = new Object();
-        /* paresedDB = result.map(row => {
-            event.id = 3
-            event.name = "concierto 3"
-            event.description = "el show del siglo"
-            event.start_date = '2024-03-29 00:00:00'
-            event.duration_in_minutes = 165
-            event.price = 56000
-            event.max_assistance = 50000
-            event_location.id_location = 3
-            event_location.name = "Ciudad Autonoma de Buenos Aires"
-            event_location.full_address = "Estadio de Independiente"
-            event_location.longitude = -15,5646546
-            event_location.latitude = 14,867979
-            event_location.max_capacity = 50000
-        }) */
-
-        const paresedDB = {
-            id: 3,
-            name : "concierto 3",
-            description :"el show del siglo",
-            start_date : '2024-03-29 00:00:00',
-            duration_in_minutes : 165,
-            price : 56000,
-            max_assistance : 50000,
-            id_location : 3,
-            full_address : "Estadio de Independiente",
-            longitude : -155646546,
-            latitude : 14867979,
-            max_capacity : 50000,
-        }
-
+        paresedDB = result.map(row => {
+            event.id = row.id
+            event.name = row.name
+            event.description = row.description
+            event.start_date = row.start_date
+            event.duration_in_minutes = row.duration_in_minutes
+            event.price = row.price
+            event.max_assistance = row.max_assistance
+            event_location.id_location = row.id_location
+            event_location.name = row.el_name
+            event_location.full_address = row.full_address
+            event_location.longitude = row.longitude
+            event_location.latitude = row.latitude
+            event_location.max_capacity = row.max_capacity
+        }) 
         return{
             collection: paresedDB,
         };
@@ -185,33 +111,23 @@ export default class EventosServicios{
     ListadoParticiPantes(id, first_name, last_name, username, attended, rating){
         const result = bd.Consulta4(id, first_name, last_name, username, attended, rating)
         var user = new Object();
-        /* parsedDB = result.map(row => {
-            user.id = 4
-            user.username = "SimonSuken"
-            user.first_name = "Simon"
-            user.last_name = "Suken"
-            row.ee.attended = true
-            row.ee.rating = 8
-            row.ee.description = "el show"
-        }) */
-        const parsedDB = {
-            id: 1,
-            username: "Sim",
-            first_name: "s",
-            last_name: "dad",
-            attended: true,
-            rating: 3,
-            description: "qsy"
-        }
+        parsedDB = result.map(row => {
+            user.id = row.id
+            user.username = row.username
+            user.first_name = row.first_name
+            user.last_name = row.last_name
+            attended = row.ee.attended
+            rating = row.ee.rating 
+            description = row.ee.description 
+        }) 
         return{
             collection: parsedDB,
         };
     }
 
     CrearEjercicio8Eventos(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user){
-        return("Evento creado efectivamente")
         try{
-            //bd.Consulta5(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user)
+            bd.Consulta5(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user)
             return("Evento creado efectivamente")
         } catch(error){
             console.log("Error creacion de evento");
@@ -220,9 +136,8 @@ export default class EventosServicios{
     }
     
     EditarEjercicio8Eventos(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user){
-        return("Evento editado efectivamente")
         try{
-            //bd.Consulta6(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user)
+            bd.Consulta6(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user)
             return("Evento editado efectivamente")
         } catch(error){
             console.log("Error edicion de evento");
@@ -231,9 +146,8 @@ export default class EventosServicios{
     }
 
     EliminarEjercicio8Eventos(id, id_creator_user){
-        return("Evento borrado efectivamente")
         try{
-            //bd.Consulta7(id, id_creator_user)
+            bd.Consulta7(id, id_creator_user)
             return("Evento borrado efectivamente")
         } catch(error){
             console.log("Error borrado de evento");
@@ -241,4 +155,14 @@ export default class EventosServicios{
         }
     }
 
-}    
+    paresedOffset(offset){
+        return !isNaN(pareseInt(offset)) ? pareseInt(offset) : 0;
+    }
+
+    parsedLimit(limit){
+        return !isNaN(pareseInt(limit)) ? pareseInt(limit) : 15; 
+    }
+
+}  
+
+  

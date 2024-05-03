@@ -1,36 +1,20 @@
 import Bd from "../repositories/provincias-repositories.js";
+const bd = new Bd();
 
 export default class ProvinciasServicios{
     
     ObtencionProvincias(pageSize, requestedPage){
-        const sql = `SELECT * from provinces`
-        const provincias = Bd.Consulta1(sql)
-        const provincias1 = {
-            name: "dad",
-            full_name: "DD",
-            latitude: 424,
-            longitude: 4555,
-            display_order: 52,
-        }
-        const provincias2 = {
-            name: "dad",
-            full_name: "DD",
-            latitude: 424,
-            longitude: 4555,
-            display_order: 52,
-        }
-        const provincias3 = {
-            name: "dad",
-            full_name: "DD",
-            latitude: 424,
-            longitude: 4555,
-            display_order: 52,
-        }
-        const provinciasss = {
-            provincias1, provincias2, provincias3,
-        }
+        const provincias = bd.Consulta1()
+        var provinciasr = new Object()
+        parseProv = provincias.map(row =>{
+            provinciasr.id = row.id
+            provinciasr.name = row.name
+            provinciasr.full_name = row.full_name
+            provinciasr.latitude = row.latitude
+            provinciasr.longitude = row.longitude
+        })
         return{
-            collection: provinciasss,
+            collection: parseProv,
             pagination: {                
                 limit: pageSize,
                 offset: requestedPage,
@@ -40,21 +24,20 @@ export default class ProvinciasServicios{
     }
 
     ObtencionProvinciasID(id){
-        const provincia = Bd.Consulta2(id)
-        const provincias1 = {
-            name: "dad",
-            full_name: "DD",
-            latitude: 424,
-            longitude: 4555,
-            display_order: 52,
-        }
+        const provincia = bd.Consulta2(id)
+        parseProv = provincia.map(row =>{
+            provinciasr.id = row.id
+            provinciasr.name = row.name
+            provinciasr.full_name = row.full_name
+            provinciasr.latitude = row.latitude
+            provinciasr.longitude = row.longitude
+        })
         return provincias1
     }
 
     CrearEjercicio7Provincias(id, name, full_name, latitude, longitude, display_order){
-        return("Provincia creada con exito")
         try{
-            Bd.Consulta3(id, name, full_name, latitude, longitude, display_order)
+            bd.Consulta3(id, name, full_name, latitude, longitude, display_order)
             return("Provincia creada con exito")
         }catch(error){
             console.log("Error creacion de provincia servicio");
@@ -63,9 +46,8 @@ export default class ProvinciasServicios{
     }
     
     EditarEjercicio7Provincia(id, name, full_name, latitude, longitude, display_order){
-        return("Provincia editada con exito")
         try{
-            Bd.Consulta(id, name, full_name, latitude, longitude, display_order)
+            bd.Consulta(id, name, full_name, latitude, longitude, display_order)
             return("Provincia editada con exito")
         }catch(error){
             console.log("Error edicion de provincia servicio");
@@ -74,9 +56,8 @@ export default class ProvinciasServicios{
     }
 
     EliminarEjercicio7Provincia(id){
-        return("Provincia eliminada con exito")
         try{
-            Bd.Consulta(id)
+            bd.Consulta(id)
             return("Provincia eliminada con exito")
         }catch(error){
             console.log("Error eliminacion de provincia servicio");

@@ -10,9 +10,10 @@ router.get("/",  (request, response) => {
     const category = request.query.category;
     const startDate = request.query.startDate;
     const tag = request.query.tag;
+    const url = request.originalUrl;
     if(limit != null || offset != null){
         try {
-            const todoseventos = eventService.getAllEvent(limit, offset);
+            const todoseventos = eventService.getAllEvent(limit, offset, url);
             return response.json(todoseventos);
         }catch(error){
             console.log("Error ej2 controller");
@@ -20,7 +21,9 @@ router.get("/",  (request, response) => {
         }
     }else if(name != null || category != null || startDate != null || tag != null){
         try {
+            console.log("test 1 ")
             const BusquedaEvent = eventService.BusquedaEvento(name, category, startDate, tag);
+
             return response.json(BusquedaEvent);
         } catch(error){
             console.log(error)
@@ -45,11 +48,11 @@ router.get("/:id", (request, response) => {
 })
 
 router.get("/:id/enrollment", (request, respose) => {
-    const first_name = request.query.first_name
-    const last_name = request.query.last_name
-    const username = request.query.username
-    const attended = request.query.attended
-    const rating = request.query.rating
+    const first_name = request.body.first_name
+    const last_name = request.body.last_name
+    const username = request.body.username
+    const attended = request.body.attended
+    const rating = request.body.rating
     if(first_name != null || last_name != null || username != null || attended != attended || attended != null || rating != null){
         try{
             const usuario = eventService.ListadoParticiPantes(request.params.id, first_name, last_name, username, attended, rating)
@@ -71,20 +74,19 @@ router.get("/:id/enrollment", (request, respose) => {
     
 })
 
-router.post("/creation_event", (request, response) => {
-    const id = request.query.id
-    const name = request.name.id
-    const description = request.description.id
-    const id_event_category = request.id_event_category.id
-    const id_envet_location = request.id_envet_location.id
-    const start_date = request.start_date.id
-    const duration_in_minutes = request.duration_in_minutes.id
-    const price = request.price.id
-    const enabled_for_enrollment = request.enabled_for_enrollment.id
-    const max_assistance = request.max_assistance.id
-    const id_creator_user = request.id_creator_user.id
+router.post("/:id", (request, response) => {
+    const name = request.body.name
+    const description = request.body.description
+    const id_event_category = request.body.id_event_category
+    const id_envet_location = request.body.id_event_location
+    const start_date = request.body.start_date
+    const duration_in_minutes = request.body.duration_in_minutes
+    const price = request.body.price
+    const enabled_for_enrollment = request.body.enabled_for_enrollment
+    const max_assistance = request.body.max_assistance
+    const id_creator_user = request.body.id_creator_user
     try{
-        const confirmacion = eventService.CrearEjercicio8(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user)
+        const confirmacion = eventService.CrearEjercicio8(request.params.id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user)
         return response.json(confirmacion)
     } catch(error){
         console.log("Error en creacion de eventos controller")
@@ -92,28 +94,30 @@ router.post("/creation_event", (request, response) => {
     }
 })
 
-router.put("/:id/:id_creator_user/edition_event", (request, response) => {
-    const name = request.query.name
-    const description = request.query.description
-    const id_event_category = request.query.id_event_category
-    const id_envet_location = request.query.id_envet_location
-    const start_date = request.query.start_date
-    const duration_in_minutes = request.query.duration_in_minutes
-    const price = request.query.price
-    const enabled_for_enrollment = request.query.enabled_for_enrollment
-    const max_assistance = request.query.max_assistance
+router.put("/:id", (request, response) => {
+    const name = request.body.name
+    const description = request.body.description
+    const id_event_category = request.body.id_event_category
+    const id_envet_location = request.body.id_envet_location
+    const start_date = request.body.start_date
+    const duration_in_minutes = request.body.duration_in_minutes
+    const price = request.body.price
+    const enabled_for_enrollment = request.body.enabled_for_enrollment
+    const max_assistance = request.body.max_assistance
+    const id_creator_user = request.body.id_creator_user
     try{
-        const confirmacion = eventService.EditarEjercicio8Eventos(request.params.id, request.params.id_creator_user, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance)
+        const confirmacion = eventService.EditarEjercicio8Eventos(request.params.id, id_creator_user, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance)
         return response.json(confirmacion)
     } catch(error){
         console.log("Error en edicion de eventos controller")
         return response.json("Error en edicion de eventos")
-    }
+    } 
 })
 
-router.delete("/:id/:id_creator_user/delete_event", (request, response) => {
+router.delete("/:id", (request, response) => {
+    const id_creator_user = request.body.id_creator_user
     try{
-        const confirmacion = eventService.EliminarEjercicio8Eventos(request.params.id, request.params.id_creator_user)
+        const confirmacion = eventService.EliminarEjercicio8Eventos(request.params.id,id_creator_user)
         return response.json(confirmacion)
     }catch(error){
         console.log("Error en el delete eventos")
