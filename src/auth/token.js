@@ -2,10 +2,11 @@ import jwt from 'jsonwebtoken';
 
 //info del token, 
 const payload = {
-    userid: 'sd'
-}
+    id: 'id',
+    username: 'username'
+};
 
-const secretKey = 'clave123'
+const secretKey = 'contraseña123';
 
 const options = {
     expiresIn : '1h',
@@ -13,3 +14,5 @@ const options = {
     algorithm: hmacSha256
 }
 
+const token = jwt.sign(payload, secretKey, options)
+console.log(token);

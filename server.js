@@ -5,7 +5,7 @@ import express from "express"
 
 const app = express(); 
 app.use(express.json()); 
-const port = 3508;
+const port = 3408;
 
 app.use("/event", EventController);
 app.use("/user", UserController);

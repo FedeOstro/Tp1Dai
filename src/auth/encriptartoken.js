@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-const secretKey = '';
+const secretKey = 'contraseña123';
 let token = '';
 let payloadOriginal = null;
 
@@ -9,3 +9,5 @@ try{
 }catch(error){
     console.error(error)
 }
+
+console.log(payloadOriginal)

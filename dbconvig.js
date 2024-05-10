@@ -7,7 +7,7 @@ const config = {
     database : process-env.DB_DATABASE,
     OPTION : {
         trustServerCertificate : true,
-        trustedConnection : true,
+        trustedConnection : true
     }
 }
 
