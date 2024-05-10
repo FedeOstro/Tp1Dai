@@ -50,14 +50,12 @@ export default class EventosServicios{
 
  
     async BusquedaEvento(name, category, startDate, tag){
-        console.log("pre query")
         const result = await bd.Consulta2(name, category, startDate, tag)
-        console.log("post query")
-        console.log(result)
         var event = new Object();
         var creator_user = new Object();
         var event_categories  = new Object();
         var event_location = new Object();
+        var tags = new Object();
         parsedDB = result.map(row => {
             event.id = row.id
             event.name = row.name
@@ -67,7 +65,6 @@ export default class EventosServicios{
             event.price = row.price
             event.enabled_for_enrollment = row.enabled_for_enrollment
             event.max_assistance = row.max_assistance
-            event.tags = row.tags_name
             creator_user.id = row.user_id
             creator_user.username = row.username
             creator_user.first_name = row.first_name
@@ -80,6 +77,8 @@ export default class EventosServicios{
             event_location.latitude = row.latitude
             event_location.longitude = row.longitude
             event_location.max_capacity = row.max_assistance
+            tags.id = row.tags_id
+            tags.name = row.tags_name
         })
         return(parsedDB)
     }

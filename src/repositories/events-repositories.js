@@ -27,6 +27,7 @@ export default class Bd{
     async Consulta2(name, category, startDate, tag){ 
         const variables = [name, category, startDate, tag]
         const sql = this.ValidacionConsul2(variables)
+        console.log(sql)
         const respuesta = await this.client.query(sql);
         console.log(respuesta);
         return respuesta;
@@ -34,11 +35,11 @@ export default class Bd{
     
     ValidacionConsul2(variables){
         const validaciones = []
-        if (variables.name) validaciones.push("e.name = dadadad")
-        if (variables.category) validaciones.push("eventcat_name = $2")
-        if (variables.startDate) validaciones.push("e.start_date = $3")
-        if (variables.tag) validaciones.push("tags_name = $4")  
-        const sql = `SELECT e.id, e.name, e.description, e.start_date, e.duration_in_minutes, e.price, e.enabled_for_enrollment, e.max_assistance, t.name as tags_name, u.id as user_id, u.username, u.first_name, u.last_name, ec.id as eventcat_id, ec.name as eventcat_name, el.id as el_id, el.name as el_name, el.full_address, el.latitude, el.longitude, el.max_capacity  
+        if (variables[0]) validaciones.push(`e.name = '${variables[0]}'`)
+        if (variables[1]) validaciones.push(`ec.name = '${variables[1]}'`)
+        if (variables[2]) validaciones.push(`e.start_date = ${variables[2]}`)
+        if (variables[3]) validaciones.push(`t.name = '${variables[3]}'`)  
+        const sql = `SELECT e.id, e.name, e.description, e.start_date, e.duration_in_minutes, e.price, e.enabled_for_enrollment, e.max_assistance, t.id as tags_id ,t.name as tags_name, u.id as user_id, u.username, u.first_name, u.last_name, ec.id as eventcat_id, ec.name as eventcat_name, el.id as el_id, el.name as el_name, el.full_address, el.latitude, el.longitude, el.max_capacity  
         FROM events e    
         JOIN users u ON e.id_creator_user = u.id
         JOIN event_categories ec ON e.id_event_category = ec.id
@@ -46,7 +47,6 @@ export default class Bd{
         JOIN tags t ON et.id_tag = t.id
         JOIN event_locations el ON e.id_event_location = el.id
         ${variables.length > 0 ?  `WHERE ${validaciones.join(' AND ')}` : null}`;
-        console.log(sql)
         return sql;
     }
     

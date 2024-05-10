@@ -2,14 +2,16 @@ import express from "express"
 import ProvinciasServicios from "../servicios/provincias.js";
 const router = express.Router()
 
-router.get("/", (request, response) =>{
+router.get("/", async (request, response) =>{
     const id = request.query.id;
     const limit = request.query.limit;
     const offset = request.query.offset;
     if(limit != null || offset != null){
         try{
-            const todoProvincias = ProvinciasServicios.ObtencionProvincias()
-            return response.json(todoProvincias)
+            const todoProvincias = await ProvinciasServicios.ObtencionProvincias()
+            if(todoProvincias){
+                return response.json(todoseventos);
+            }
         }catch(error){
             console.log("Error obtencion provincias")
             return response.json("Error obtenicon de las provincias 7")
