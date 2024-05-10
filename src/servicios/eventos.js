@@ -4,10 +4,10 @@ const bd = new Bd();
 
 export default class EventosServicios{
 
-    getAllEvent(pageSize, requestedPage){
+    async getAllEvent(pageSize, requestedPage){
         const pageSizes = parsedLimit(pageSize)
         const requestedPages = parsedOffset(requestedPage)
-        const result = bd.Consulta1(pageSizes, requestedPages);
+        const result = await bd.Consulta1(pageSizes, requestedPages);
         var event = new Object();
         var creator_user = new Object();
         var event_categories  = new Object();
@@ -56,7 +56,8 @@ export default class EventosServicios{
         var event_categories  = new Object();
         var event_location = new Object();
         var tags = new Object();
-        parsedDB = result.map(row => {
+        console.log(result)
+        const parsedDB = result.map(row => {
             event.id = row.id
             event.name = row.name
             event.description = row.description
@@ -79,11 +80,19 @@ export default class EventosServicios{
             event_location.max_capacity = row.max_assistance
             tags.id = row.tags_id
             tags.name = row.tags_name
+            return{
+                event: event,
+                creator_user: creator_user,
+                event_categories: event_categories,
+                event_location: event_location,
+                tags: tags
+            }
         })
+        console.log(parsedDB)
         return(parsedDB)
     }
 
-    ConsultaEvento(id){
+    async ConsultaEvento(id){
         const result = bd.Consulta3(id)
         var event = new Object();
         var event_location = new Object();
@@ -107,7 +116,7 @@ export default class EventosServicios{
         };
     }
 
-    ListadoParticiPantes(id, first_name, last_name, username, attended, rating){
+    async ListadoParticiPantes(id, first_name, last_name, username, attended, rating){
         const result = bd.Consulta4(id, first_name, last_name, username, attended, rating)
         var user = new Object();
         parsedDB = result.map(row => {
@@ -124,7 +133,7 @@ export default class EventosServicios{
         };
     }
 
-    CrearEjercicio8Eventos(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user){
+    async CrearEjercicio8Eventos(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user){
         try{
             bd.Consulta5(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user)
             return("Evento creado efectivamente")
@@ -134,7 +143,7 @@ export default class EventosServicios{
         }
     }
     
-    EditarEjercicio8Eventos(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user){
+    async EditarEjercicio8Eventos(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user){
         try{
             bd.Consulta6(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user)
             return("Evento editado efectivamente")
@@ -144,7 +153,7 @@ export default class EventosServicios{
         }
     }
 
-    EliminarEjercicio8Eventos(id, id_creator_user){
+    async EliminarEjercicio8Eventos(id, id_creator_user){
         try{
             bd.Consulta7(id, id_creator_user)
             return("Evento borrado efectivamente")

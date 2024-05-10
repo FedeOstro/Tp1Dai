@@ -11,6 +11,9 @@ export default class Bd{
     }
 
     async Consulta1(pageSize, requestedPage) {
+        const validaciones = []
+        if (pageSize) validaciones.push(`limit ${pageSize}`)
+        if (requestedPage) validaciones.push(`offset ${requestedPage}`)
         const sql = `SELECT e.id, e.name, e.description, e.start_date, e.duration_in_minutes, e.price, e.enabled_for_enrollment, e.max_assistance, t.name as tags_name, u.id as user_id, u.username, u.first_name, u.last_name, ec.id as eventcat_id, ec.name as eventcat_id, el.id as el_id, el.name as el_name, el.full_address, el.latitude, el.longitude, el.max_capacity    
         FROM events e    
         JOIN users u ON e.id_creator_user = u.id
@@ -18,19 +21,16 @@ export default class Bd{
         JOIN event_tags et ON e.id = et.id_event
         JOIN tags t ON et.id_tag = t.id
         JOIN event_locations el ON e.id_event_location = el.id limit  ${pageSize} offset ${requestedPage}`;
+        const sql2 = `SELECT COUNT(*) FROM events`
         const respuesta = await this.client.query(sql);
-
-
         return respuesta;
     }
     
     async Consulta2(name, category, startDate, tag){ 
         const variables = [name, category, startDate, tag]
         const sql = this.ValidacionConsul2(variables)
-        console.log(sql)
         const respuesta = await this.client.query(sql);
-        console.log(respuesta);
-        return respuesta;
+        return respuesta.rows;
     }
     
     ValidacionConsul2(variables){

@@ -3,7 +3,9 @@ import EventosServicios from "../servicios/eventos.js";
 const router = express.Router()
 const eventService = new EventosServicios();
 
-router.get("/",  (request, response) => {
+//router.get("/", middleware, (request, response) => {
+
+router.get("/",  async (request, response) => {
     const limit = request.query.limit;
     const offset = request.query.offset;
     const name = request.query.name;
@@ -21,8 +23,8 @@ router.get("/",  (request, response) => {
         }
     }else if(name != null || category != null || startDate != null || tag != null){
         try {
-            console.log("test 1 ")
-            const BusquedaEvent = eventService.BusquedaEvento(name, category, startDate, tag);
+            const BusquedaEvent = await eventService.BusquedaEvento(name, category, startDate, tag);
+            console.log(BusquedaEvent)
             return response.json(BusquedaEvent);
         } catch(error){
             console.log(error)
@@ -34,6 +36,8 @@ router.get("/",  (request, response) => {
     }
     
 })
+
+//router.get("/", middleware, (request, response) => {
 
 router.get("/:id", (request, response) => {
     try {  
