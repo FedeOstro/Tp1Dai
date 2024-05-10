@@ -24,7 +24,6 @@ router.get("/",  async (request, response) => {
     }else if(name != null || category != null || startDate != null || tag != null){
         try {
             const BusquedaEvent = await eventService.BusquedaEvento(name, category, startDate, tag);
-            console.log(BusquedaEvent)
             return response.json(BusquedaEvent);
         } catch(error){
             console.log(error)

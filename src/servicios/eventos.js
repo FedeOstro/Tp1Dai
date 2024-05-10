@@ -4,9 +4,17 @@ const bd = new Bd();
 
 export default class EventosServicios{
 
+    parsedOffset(offset){
+        return !isNaN(parseInt(offset)) ? parseInt(offset) : 0;
+    }
+
+    parsedLimit(limit){
+        return !isNaN(parseInt(limit)) ? parseInt(limit) : 15; 
+    }
+
     async getAllEvent(pageSize, requestedPage){
-        const pageSizes = parsedLimit(pageSize)
-        const requestedPages = parsedOffset(requestedPage)
+        const pageSizes = this.parsedLimit(pageSize)
+        const requestedPages = this.parsedOffset(requestedPage)
         const result = await bd.Consulta1(pageSizes, requestedPages);
         var event = new Object();
         var creator_user = new Object();
@@ -34,6 +42,7 @@ export default class EventosServicios{
             event_location.latitude = row.latitude
             event_location.longitude = row.longitude
             event_location.max_capacity = row.max_assistance
+            return
         })
         return{
             collection: parsedDB,
@@ -51,13 +60,13 @@ export default class EventosServicios{
  
     async BusquedaEvento(name, category, startDate, tag){
         const result = await bd.Consulta2(name, category, startDate, tag)
-        var event = new Object();
-        var creator_user = new Object();
-        var event_categories  = new Object();
-        var event_location = new Object();
-        var tags = new Object();
+        
         console.log(result)
         const parsedDB = result.map(row => {
+            var event = new Object();
+            var creator_user = new Object();
+            var event_categories  = new Object();
+            var event_location = new Object();
             event.id = row.id
             event.name = row.name
             event.description = row.description
@@ -78,17 +87,14 @@ export default class EventosServicios{
             event_location.latitude = row.latitude
             event_location.longitude = row.longitude
             event_location.max_capacity = row.max_assistance
-            tags.id = row.tags_id
-            tags.name = row.tags_name
             return{
                 event: event,
                 creator_user: creator_user,
                 event_categories: event_categories,
                 event_location: event_location,
-                tags: tags
+                tags: row.tags
             }
         })
-        console.log(parsedDB)
         return(parsedDB)
     }
 
@@ -163,13 +169,7 @@ export default class EventosServicios{
         }
     }
 
-    paresedOffset(offset){
-        return !isNaN(pareseInt(offset)) ? pareseInt(offset) : 0;
-    }
-
-    parsedLimit(limit){
-        return !isNaN(pareseInt(limit)) ? pareseInt(limit) : 15; 
-    }
+    
 
 }  
 
