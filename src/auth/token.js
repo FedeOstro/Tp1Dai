@@ -1,18 +1,18 @@
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken"
 
-//info del token, 
-const payload = {
-    id: 'id',
-    username: 'username'
-};
+console.log(token);
 
-const secretKey = 'contraseña123';
+export default async function (Usuario){
 
-const options = {
-    expiresIn : '1h',
-    issuer : 'mi_organizacion',
-    algorithm: hmacSha256
+const secretKey = "AguanteBoca123:)";
+
+const options={
+    expires:"1h",
+    issuer:"Wegman_Zaselsky"
 }
 
-const token = jwt.sign(payload, secretKey, options)
-console.log(token);
+const payload=Usuario.id
+
+
+return jwt.sign(payload,secretKey,options);
+}
