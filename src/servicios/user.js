@@ -1,5 +1,4 @@
 import Bd from "../repositories/user-repositories.js";
-import UsuarioServicios from "...controllers/user-controller.js"
 
 export default class UsuarioServicios {
     async autenticarUsuario(username, password) {
