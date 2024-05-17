@@ -6,7 +6,6 @@ const UsuarioServicios = new UsuarioServicios1();
 
 router.post("/login", async (request, response) => {
     const { username, password } = request.body;
-    console.log(username, password);
     try {
         const AutenticarUsuario = await UsuarioServicios.autenticarUsuario(username, password);
         return response.json(AutenticarUsuario);

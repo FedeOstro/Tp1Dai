@@ -3,6 +3,7 @@ import { bdconfig } from './BD_Config.js';
 
 export default class Bd {
     constructor() {
+        const {Client} = pg;
         this.client = new pg.Client(bdconfig);
         this.client.connect();
     }

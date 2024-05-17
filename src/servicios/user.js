@@ -1,4 +1,6 @@
 import Bd from "../repositories/user-repositories.js";
+const bd = new Bd();
+
 
 export default class UsuarioServicios {
     async autenticarUsuario(username, password) {
@@ -9,7 +11,7 @@ export default class UsuarioServicios {
         `;
         const values = [username, password];
         try {
-            const rta = await Bd.Consulta(sql, values);
+            const rta = await bd.Consulta(sql, values);
             return rta.rows[0]; // Devuelve el usuario autenticado si se encuentra
         } catch (error) {
             throw new Error("Error al autenticar usuario: " + error.message);
