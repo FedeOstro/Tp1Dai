@@ -14,22 +14,53 @@ export default class Bd{
         const validaciones = []
         if (pageSize) validaciones.push(`limit ${pageSize}`)
         if (requestedPage) validaciones.push(`offset ${requestedPage}`)
-        const sql = `SELECT e.id, e.name, e.description, e.start_date, e.duration_in_minutes, e.price, e.enabled_for_enrollment, e.max_assistance, t.name as tags_name, u.id as user_id, u.username, u.first_name, u.last_name, ec.id as eventcat_id, ec.name as eventcat_id, el.id as el_id, el.name as el_name, el.full_address, el.latitude, el.longitude, el.max_capacity    
-        FROM events e    
+        const sql = `SELECT e.id, e.name, e.description, e.start_date, e.duration_in_minutes, e.price, e.enabled_for_enrollment, e.max_assistance, e.id_event_category, e.id_event_location, e.id_creator_user, u.id AS user_id, u.username, u.first_name, u.last_name, ec.id AS eventcat_id, ec.name AS eventcat_name, ec.display_order,
+        json_build_object(
+            'id', el.id,
+            'name', el.name,
+            'full_address', el.full_address,
+            'latitude', el.latitude,
+            'longitude', el.longitude,
+            'max_capacity', el.max_capacity
+        ) AS event_location,
+        json_build_object(
+            'id', l.id,
+            'name', l.name,
+            'latitude', l.latitude,
+            'longitude', l.longitude
+        ) AS location,
+        json_build_object(
+            'id', p.id,
+            'name', p.name,
+            'full_name', p.full_name,
+            'latitude', p.latitude,
+            'longitude', p.longitude,
+            'display_order', p.display_order
+        ) AS province,
+        array(
+            SELECT json_build_object(
+                'id', tags.id,
+                'name', tags.name
+            )
+            FROM tags
+        ) AS tags
+        FROM events e
         JOIN users u ON e.id_creator_user = u.id
         JOIN event_categories ec ON e.id_event_category = ec.id
+        JOIN event_locations el ON e.id_event_location = el.id
         JOIN event_tags et ON e.id = et.id_event
         JOIN tags t ON et.id_tag = t.id
-        JOIN event_locations el ON e.id_event_location = el.id limit  ${pageSize} offset ${requestedPage}`;
-        const sql2 = `SELECT COUNT(*) FROM events`
+        JOIN locations l ON el.id_location = l.id
+        JOIN provinces p ON l.id_province = p.id
+        GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16, el.id, l.id, p.id
+        ${validaciones.length > 0 ?  `${validaciones.join()}` : null}`;
         const respuesta = await this.client.query(sql);
-        return respuesta;
+        return respuesta.rows
     }
     
     async Consulta2(name, category, startDate, tag){ 
         const variables = [name, category, startDate, tag]
         const sql = this.ValidacionConsul2(variables)
-        console.log(sql)
         const respuesta = await this.client.query(sql);
         return respuesta.rows;
     }
@@ -40,29 +71,63 @@ export default class Bd{
         if (variables[1]) validaciones.push(`ec.name = '${variables[1]}'`)
         if (variables[2]) validaciones.push(`e.start_date = ${variables[2]}`)
         if (variables[3]) validaciones.push(`t.name = '${variables[3]}'`)  
-        const sql = `SELECT e.id, e.name, e.description, e.start_date, e.duration_in_minutes, e.price, e.enabled_for_enrollment, e.max_assistance, u.id as user_id, u.username, u.first_name, u.last_name, ec.id as eventcat_id, ec.name as eventcat_name, el.id as el_id, el.name as el_name, el.full_address, el.latitude, el.longitude, el.max_capacity, 
-            array( select json_build_object(
+        const sql = `SELECT e.id, e.name, e.description, e.start_date, e.duration_in_minutes, e.price, e.enabled_for_enrollment, e.max_assistance, e.id_event_category, e.id_event_location, e.id_creator_user, u.id AS user_id, u.username, u.first_name, u.last_name, ec.id AS eventcat_id, ec.name AS eventcat_name, ec.display_order,
+        json_build_object(
+            'id', el.id,
+            'name', el.name,
+            'full_address', el.full_address,
+            'latitude', el.latitude,
+            'longitude', el.longitude,
+            'max_capacity', el.max_capacity
+        ) AS event_location,
+        json_build_object(
+            'id', l.id,
+            'name', l.name,
+            'latitude', l.latitude,
+            'longitude', l.longitude
+        ) AS location,
+        json_build_object(
+            'id', p.id,
+            'name', p.name,
+            'full_name', p.full_name,
+            'latitude', p.latitude,
+            'longitude', p.longitude,
+            'display_order', p.display_order
+        ) AS province,
+        array(
+            SELECT json_build_object(
                 'id', tags.id,
                 'name', tags.name
-            )FROM tags ) as tags
-                FROM events e    
-                JOIN users u ON e.id_creator_user = u.id
-                INNER JOIN event_categories ec ON e.id_event_category = ec.id
-                JOIN event_locations el ON e.id_event_location = el.id
-                INNER JOIN event_tags et ON e.id = et.id_event
-                JOIN tags t ON et.id_tag = t.id
-            WHERE et.id_tag = t.id
-            ${variables.length > 0 ?  ` AND ${validaciones.join(' AND ')}` : null}`;
-        const groupby = ` group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15`
+            )
+            FROM tags
+        ) AS tags
+        FROM events e
+        JOIN users u ON e.id_creator_user = u.id
+        JOIN event_categories ec ON e.id_event_category = ec.id
+        JOIN event_locations el ON e.id_event_location = el.id
+        JOIN event_tags et ON e.id = et.id_event
+        JOIN tags t ON et.id_tag = t.id
+        JOIN locations l ON el.id_location = l.id
+        JOIN provinces p ON l.id_province = p.id
+        ${variables.length > 0 ?  ` AND ${validaciones.join(' AND ')}` : null}`;
+        const groupby = ` GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16, el.id, l.id, p.id`
         const sql2 = sql + groupby
         return sql2;
     }
     
     async Consulta3(id){
-        const sql = `SELECT e.id, e.name, e.description, e.start_date, e.duration_in_minutes, e.price, e.enabled_for_enrollment, e.max_assistance , el.id_location, el.name as el_name, el.full_address, el.longitude, el.latitude, el.max_capacity
-        FROM events e
-        JOIN event_locations el ON e.id_event_location = el.id
-        WHERE e.id = '${id}'`;
+        const sql = `SELECT e.id, e.name, e.description, e.start_date, e.duration_in_minutes, e.price, e.enabled_for_enrollment, e.max_assistance, e.id_event_category, e.id_event_location, e.id_creator_user,u.id as user_id, u.username, u.first_name, u.last_name, ec.id as eventcat_id, ec.name as eventcat_name, el.id as el_id, el.name as el_name, el.full_address, el.latitude, el.longitude, el.max_capacity, 
+        array( select json_build_object(
+            'id', tags.id,
+            'name', tags.name
+        )FROM tags ) as tags
+            FROM events e    
+            JOIN users u ON e.id_creator_user = u.id
+            INNER JOIN event_categories ec ON e.id_event_category = ec.id
+            JOIN event_locations el ON e.id_event_location = el.id
+            INNER JOIN event_tags et ON e.id = et.id_event
+            JOIN tags t ON et.id_tag = t.id
+        WHERE e.id = ${id} group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20 `;
         const respuesta = await this.client.query(sql);
         return respuesta; 
     }

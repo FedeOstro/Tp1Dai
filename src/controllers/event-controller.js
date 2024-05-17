@@ -15,7 +15,7 @@ router.get("/",  async (request, response) => {
     const url = request.originalUrl;
     if(limit != null || offset != null){
         try {
-            const todoseventos = eventService.getAllEvent(limit, offset, url);
+            const todoseventos = await eventService.getAllEvent(limit, offset, url);
             return response.json(todoseventos);
         }catch(error){
             console.log("Error ej2 controller");
