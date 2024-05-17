@@ -1,18 +1,18 @@
 import pg from 'pg';
 import { bdconfig } from './BD_Config.js';
 
-
-export default class Bd{
-
-    constructor(){
+export default class Bd {
+    constructor() {
         this.client = new pg.Client(bdconfig);
         this.client.connect();
     }
 
-
-    async Consulta(sql) {
-        const respuesta = await this.client.query(sql);
-        return respuesta;
+    async Consulta(sql, values = []) {
+        try {
+            const respuesta = await this.client.query(sql, values);
+            return respuesta;
+        } catch (error) {
+            throw new Error("Error al realizar la consulta: " + error.message);
+        }
     }
-    
 }

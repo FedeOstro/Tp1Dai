@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-export default async function (token){
+export default async function encriptartoken(token){
     const secretKey = 'contraseña123';
     let payloadOriginal = null;
 

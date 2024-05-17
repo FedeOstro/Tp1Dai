@@ -4,11 +4,11 @@ console.log(token);
 
 export default async function (Usuario){
 
-const secretKey = "AguanteBoca123:)";
+const secretKey = "contraseña123:)";
 
 const options={
     expires:"1h",
-    issuer:"Wegman_Zaselsky"
+    issuer:"Fede_Simon"
 }
 
 const payload=Usuario.id

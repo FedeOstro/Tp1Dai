@@ -1,32 +1,30 @@
-import express from "express"
-import UsuarioServicios from "../servicios/user.js";
-const router = express.Router()
+import express from "express";
+import UsuarioServicios1 from "../servicios/user.js";
 
-router.get("/user/login", (request, response) =>{
-    const username = request.query.username
-    const password = request.query.password
-    try{
-        const AutenticarUsuario = UsuarioServicios.autenticarUsuario(username, password)
-        return response.json(AutenticarUsuario)
-    }catch(error){
-        console.log("Error ejercicio 6 login")
-        return response.json("Error ejercicio 6 login")
+const router = express.Router();
+const UsuarioServicios = new UsuarioServicios1();
+
+router.post("/login", async (request, response) => {
+    const { username, password } = request.body;
+    console.log(username, password);
+    try {
+        const AutenticarUsuario = await UsuarioServicios.autenticarUsuario(username, password);
+        return response.json(AutenticarUsuario);
+    } catch(error) {
+        console.log("Error ejercicio 6 login:", error);
+        return response.json("Error ejercicio 6 login");
     }
-})
+});
 
-
-router.get("/user/register", (request, response) =>{
-    const first_name = request.query.first_name
-    const last_name = request.query.last_name
-    const username = request.query.username
-    const password = request.query.password
-    try{
-        const AutenticarRegistro = UsuarioServicios.AutenticarRegistro(first_name, last_name, username, password)
-        return response.json(AutenticarRegistro)
-    }catch(error){
-        console.log("Error ejercicio 6 register")
-        return response.json("Error ejercicio 6 register")
+router.get("/register", async (request, response) => {
+    const { first_name, last_name, username, password } = request.query;
+    try {
+        const AutenticarRegistro = await UsuarioServicios.autenticarRegistro(first_name, last_name, username, password);
+        return response.json(AutenticarRegistro);
+    } catch(error) {
+        console.log("Error ejercicio 6 register:", error);
+        return response.json("Error ejercicio 6 register");
     }
-})
+});
 
-export default router
+export default router;
