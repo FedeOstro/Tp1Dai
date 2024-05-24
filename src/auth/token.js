@@ -1,18 +1,20 @@
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
+import "dotenv/config";
 
-console.log(token);
+export default async function generarToken(usuario) {
+    const options = {
+        expiresIn: "1h", // Opcional: tiempo de expiración del token
+        issuer: "Fede_Simon",
+    };
 
-export default async function (Usuario){
+    // Genera el payload del token utilizando los datos del usuario
+    const payload = {
+        id: usuario.id,
+        username: usuario.username,
+        // Agrega cualquier otro dato necesario para tu aplicación
+    };
 
-const secretKey = "contraseña123:)";
-
-const options={
-    expires:"1h",
-    issuer:"Fede_Simon"
-}
-
-const payload=Usuario.id
-
-
-return jwt.sign(payload,secretKey,options);
+    // Genera y devuelve el token JWT firmado
+    const token = jwt.sign(payload, process.env.SECRET_KEY, options);
+    return token;
 }
