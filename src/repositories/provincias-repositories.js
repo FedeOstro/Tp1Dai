@@ -18,7 +18,7 @@ export default class Bd{
     async Consulta2(id){
         const sql = `SELECT * from provinces WHERE id = ${id}`
         const respuesta = await this.client.query(sql);
-        return respuesta
+        return respuesta.rows
     }
     
     async Consulta3(id, name, full_name, latitude, longitude, display_order){

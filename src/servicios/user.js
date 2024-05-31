@@ -12,7 +12,7 @@ export default class UsuarioServicios {
         const values = [username, password];
         try {
             const rta = await bd.Consulta(sql, values);
-            return rta.rows[0]; // Devuelve el usuario autenticado si se encuentra
+            return rta.rows[0];
         } catch (error) {
             throw new Error("Error al autenticar usuario: " + error.message);
         }
@@ -23,7 +23,7 @@ export default class UsuarioServicios {
         if (existingUser) {
             throw new Error("El nombre de usuario ya está en uso.");
         }
-
+    
         const sql = `
             INSERT INTO users (first_name, last_name, username, password)
             VALUES ($1, $2, $3, $4)
@@ -31,12 +31,14 @@ export default class UsuarioServicios {
         `;
         const values = [first_name, last_name, username, password];
         try {
-            const rta = await Bd.Consulta(sql, values);
+            const rta = await bd.Consulta(sql, values);
             return rta.rows[0];
         } catch (error) {
             throw new Error("Error al registrar usuario: " + error.message);
         }
     }
+    
+    
 
     async buscarUsuarioPorUsername(username) {
         const sql = `
@@ -46,10 +48,10 @@ export default class UsuarioServicios {
         `;
         const values = [username];
         try {
-            const rta = await Bd.Consulta(sql, values);
+            const rta = await bd.Consulta(sql, values); 
             return rta.rows[0];
         } catch (error) {
             throw new Error("Error al buscar usuario por nombre de usuario: " + error.message);
         }
-    }
+    }    
 }

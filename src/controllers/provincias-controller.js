@@ -1,6 +1,7 @@
 import express from "express"
 import ProvinciasServicios from "../servicios/provincias.js";
 const router = express.Router()
+const serviceProv = new ProvinciasServicios();
 
 router.get("/", async (request, response) =>{
     const id = request.query.id;
@@ -8,7 +9,7 @@ router.get("/", async (request, response) =>{
     const offset = request.query.offset;
     if(limit != null || offset != null){
         try{
-            const todoProvincias = await ProvinciasServicios.ObtencionProvincias()
+            const todoProvincias = await serviceProv.ObtencionProvincias()
             if(todoProvincias){
                 return response.json(todoseventos);
             }
@@ -18,11 +19,11 @@ router.get("/", async (request, response) =>{
         }
     }else if(id != null){
         try{
-            const provinciaId = ProvinciasServicios.ObtencionProvinciasID(id)
-            return response.json(provinciaId)
+            const provinciaId = await serviceProv.ObtencionProvinciasID(id)
+            return response.json(provinciaId);
         }catch(error){
-            console.log("Erro obtencion provincias id")
-            return response.json("Erro en la obtencion de la provincia con id")
+            console.log("Error obtencion provincias id")
+            return response.json("Error en la obtencion de la provincia con id")
         }
     }else{
         console.log("Error en toda obtencion")
@@ -37,7 +38,7 @@ router.post("/:id", (request, response) => {
     const longitude = request.body.longitude;
     const display_order = request.body.display_order;
     try{
-        const confirmacion = ProvinciasServicios.CrearEjercicio7Provincias(request.params.id, name, full_name, latitude, longitude, display_order)
+        const confirmacion = serviceProv.CrearEjercicio7Provincias(request.params.id, name, full_name, latitude, longitude, display_order)
         return response.json(confirmacion)
     }catch(error){
         console.log("Error en creacion de provincias")
@@ -52,7 +53,7 @@ router.put("/:id", (request, response) => {
     const longitude = request.body.longitude;
     const display_order = request.body.display_order;
     try{
-        const confirmacion = ProvinciasServicios.EditarEjercicio7Provincia(request.params.id, name, full_name, latitude, longitude, display_order)
+        const confirmacion = serviceProv.EditarEjercicio7Provincia(request.params.id, name, full_name, latitude, longitude, display_order)
         return response.json(confirmacion)
     }catch(error){
         console.log("Error en actualizacion")
@@ -61,7 +62,7 @@ router.put("/:id", (request, response) => {
 
 router.delete("/:id", (request, respose) => {
     try{
-        const confirmacion = ProvinciasServicios.EliminarEjercicio7Provincia(request.params.id)
+        const confirmacion = serviceProv.EliminarEjercicio7Provincia(request.params.id)
         return respose.json(confirmacion)
     }catch(error){
         console.log("Error en la eliminacion de provincia")
