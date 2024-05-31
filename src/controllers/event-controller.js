@@ -13,15 +13,7 @@ router.get("/",  async (request, response) => {
     const startDate = request.query.startDate;
     const tag = request.query.tag;
     const url = request.originalUrl;
-    if(limit != null || offset != null){
-        try {
-            const todoseventos = await eventService.getAllEvent(limit, offset, url);
-            return response.json(todoseventos);
-        }catch(error){
-            console.log("Error ej2 controller");
-            return response.json("Error ej2 controller");
-        }
-    }else if(name != null || category != null || startDate != null || tag != null){
+    if(name != null || category != null || startDate != null || tag != null){
         try {
             const BusquedaEvent = await eventService.BusquedaEvento(name, category, startDate, tag);
             return response.json(BusquedaEvent);
@@ -30,17 +22,27 @@ router.get("/",  async (request, response) => {
             return response.json(error)
         }
     }else{
-        console.log("error endpoint /")
-        return response.json("Faltan variables para la busqueda")
+        try {
+            const todoseventos = await eventService.getAllEvent(limit, offset, url);
+            return response.json(todoseventos);
+        }catch(error){
+            console.log("Error ej2 controller");
+            return response.json("Error ej2 controller");
+        }
     }
     
 })
 
-//router.get("/", middleware, (request, response) => {
 
-router.get("/:id", (request, response) => {
-    try {  
-        const evento = eventService.ConsultaEvento(request.params.id);
+router.get("/:id", async (request, response) => {
+    try { 
+        const evento = await eventService.ConsultaEvento(request.params.id);
+        if(evento.length == 0) {
+            response.statusCode = 404;
+            return response.json("Evento no encontrado")
+        }else{
+            response.statusCode = 200;
+        }
         return response.json(evento)
     } catch(error){
         console.log("Error ejercicio 4 controller")
@@ -49,14 +51,14 @@ router.get("/:id", (request, response) => {
 })
 
 router.get("/:id/enrollment", async(request, respose) => {
-    const first_name = request.body.first_name
-    const last_name = request.body.last_name
-    const username = request.body.username
-    const attended = request.body.attended
-    const rating = request.body.rating
-    if(first_name != null || last_name != null || username != null || attended != attended || attended != null || rating != null){
+    const first_name = request.query.first_name
+    const last_name = request.query.last_name
+    const usernames = request.query.username
+    const attended = request.query.attended
+    const rating = request.query.rating
+    if(first_name != null || last_name != null || usernames != null || attended != attended || attended != null || rating != null){
         try{
-            const usuario = await eventService.ListadoParticiPantes(request.params.id, first_name, last_name, username, attended, rating)
+            const usuario = await eventService.ListadoParticiPantes(request.params.id, first_name, last_name, usernames, attended, rating)
             if(usuario){
                 return respose.json(usuario)
             } else{
@@ -64,7 +66,8 @@ router.get("/:id/enrollment", async(request, respose) => {
                 return respose.json("No se encontro al usuario")
             }
         }catch(error){
-
+            console.log("Error ej 5 catch")
+            return respose.json("Error ej 5 catch")
         }
     }else{
         try{

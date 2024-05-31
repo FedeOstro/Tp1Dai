@@ -17,7 +17,6 @@ export default class EventosServicios{
         const requestedPages = this.parsedOffset(requestedPage)
         const result = await bd.Consulta1(pageSizes, requestedPages);
         const totalCount = result.length
-        console.log(result)
         const parsedDB = result.map(row => {
             var event = new Object();
             var creator_user = new Object();
@@ -47,8 +46,8 @@ export default class EventosServicios{
                 event_location: event_location,
                 tags: row.tags,
                 pagination: {
-                    limit: pageSize,
-                    offset: requestedPage,
+                    limit: pageSizes,
+                    offset: requestedPages,
                     nextPage: ((requestedPages + 1) * pageSizes <= totalCount) ? `${process.env.BASE_URL}/${path}?limit=${pageSizes}&offset=${requestedPages + 1}` : null,
                     total: totalCount,   
                 }
@@ -92,14 +91,15 @@ export default class EventosServicios{
                 tags: row.tags,
                 pagination:{
                     nextPage: `${process.env.BASE_URL}/${path}${(event.name) ? `&eventName=${event.name}` : null}${(event_categories.id) ? `&eventCategory=${event_categories.id}` : null} ${(event.startdate) ? `&eventDate=${event.startdate}` : null}`
-                }
+                },
+                total: totalCount
             }
         })
         return(parsedDB)
     }
 
     async ConsultaEvento(id){
-        const result = bd.Consulta3(id)
+        const result = await bd.Consulta3(id)
         const parsedDB = result.map(row => {
             var event = new Object();
             var creator_user = new Object();
@@ -119,38 +119,45 @@ export default class EventosServicios{
             creator_user.last_name = row.last_name
             event_categories.id = row.eventcat_id
             event_categories.name = row.eventcat_name
-            event_location.id = row.el_id
-            event_location.name = row.el_name
-            event_location.full_address = row.full_address
-            event_location.latitude = row.latitude
-            event_location.longitude = row.longitude
-            event_location.max_capacity = row.max_assistance
+            event_location = row.event_location
+            event_location.location = row.location
+            event_location.location.province = row.province
             return{
                 event: event,
                 creator_user: creator_user,
                 event_categories: event_categories,
                 event_location: event_location,
-                tags: row.tags
+                tags: row.tags,
             }
         })
-        return parsedDB;
+        return(parsedDB)
     }
 
     async ListadoParticiPantes(id, first_name, last_name, username, attended, rating){
-        const result = bd.Consulta4(id, first_name, last_name, username, attended, rating)
-        var user = new Object();
+        console.log("EstoyAcA")
+        const result = await bd.Consulta4(id, first_name, last_name, username, attended, rating)
+        
         parsedDB = result.map(row => {
-            user.id = row.id
-            user.username = row.username
+            var user = new Object();
+            var enrollment = new Object();
+            user.id = row.user_id
             user.first_name = row.first_name
             user.last_name = row.last_name
-            attended = row.ee.attended
-            rating = row.ee.rating 
-            description = row.ee.description 
+            user.username = row.username
+            enrollment.id = row.id
+            enrollment.id_event = row.id_event
+            enrollment.id_user = row.id_user
+            enrollment.description = row.description
+            enrollment.registration_date_time = row.registration_date_time
+            enrollment.attended = row.attended
+            enrollment.observations = row.observations
+            enrollment.rating = row.rating
+            return{
+                enrollment: enrollment,
+                user: user
+            }
         }) 
-        return{
-            collection: parsedDB,
-        };
+        return parsedDB
     }
 
     async CrearEjercicio8Eventos(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user){
