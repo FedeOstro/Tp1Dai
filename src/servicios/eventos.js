@@ -1,7 +1,6 @@
 import Bd from "../repositories/events-repositories.js";
 const bd = new Bd();
 
-
 export default class EventosServicios{
 
     parsedOffset(offset){
@@ -134,35 +133,36 @@ export default class EventosServicios{
     }
 
     async ListadoParticiPantes(id, first_name, last_name, username, attended, rating){
-        console.log("EstoyAcA")
         const result = await bd.Consulta4(id, first_name, last_name, username, attended, rating)
-        
-        parsedDB = result.map(row => {
-            var user = new Object();
-            var enrollment = new Object();
-            user.id = row.user_id
-            user.first_name = row.first_name
-            user.last_name = row.last_name
-            user.username = row.username
-            enrollment.id = row.id
-            enrollment.id_event = row.id_event
-            enrollment.id_user = row.id_user
-            enrollment.description = row.description
-            enrollment.registration_date_time = row.registration_date_time
-            enrollment.attended = row.attended
-            enrollment.observations = row.observations
-            enrollment.rating = row.rating
+        const parsedDB = result.map(row => {
+            var us = new Object();
+            var enrols = new Object();
+            us.id = row.user_id
+            us.first_name = row.first_name
+            us.last_name = row.last_name
+            us.username = row.username
+            enrols.id = row.id
+            enrols.id_event = row.id_event
+            enrols.id_user = row.id_user
             return{
-                enrollment: enrollment,
-                user: user
+                'id': row.id,
+                'id_event': row.id_event,
+                'id_user': row.id_user,
+                user: us,
+                'description' : row.description,
+                'registration_date_time' : row.registration_date_time,
+                'attended' : row.attended,
+                'observations' : row.observations,
+                'rating': row.rating,
             }
         }) 
+        console.log(parsedDB)
         return parsedDB
     }
 
-    async CrearEjercicio8Eventos(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user){
+    async CrearEjercicio8Eventos(evento){
         try{
-            bd.Consulta5(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user)
+            bd.Consulta5(evento)
             return("Evento creado efectivamente")
         } catch(error){
             console.log("Error creacion de evento");
@@ -190,7 +190,13 @@ export default class EventosServicios{
         }
     }
 
-    
+    async ComprobarCapacity(id_creator_user){
+        try{
+            //Buenas fede del futuro seguro veas y no cases una menos mal que simon del pasado te dijo a vos osea a mi pero del pasado que es mi ahora no tu hoy que pongas este comentario para poder recordarme que esto es para saber la capacidad maxima del evento para comparar tampoco te olvides de comprar 200 g de jamon que mama pidio saludos desde ciudad esmeralda 
+        }catch{
+
+        }
+    }
 
 }  
 

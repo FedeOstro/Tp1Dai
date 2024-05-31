@@ -161,13 +161,12 @@ export default class Bd{
 
     async Consulta4(id, first_name, last_name, username, attended, rating){
         const variables = [id, first_name, last_name, username, attended, rating]
-        const sql = this.valdadoConsulta4(variables)
-        const response = await this.client.query(sql)
+        const sql = await this.valdadoConsulta4(variables)
+        const response = await this.client.query(sql);
         return response.rows
     }
 
     async valdadoConsulta4(variables){
-        console.log(variables)
         const validaciones = []
         if (variables[0]) validaciones.push(`u.id = '${variables[0]}'`)
         if (variables[1]) validaciones.push(`u.first_name = '${variables[1]}'`)
@@ -178,14 +177,13 @@ export default class Bd{
         const sql = `select en.id, en.id_event, en.id_user, en.description, en.registration_date_time, en.attended, en.observations, en.rating, u.id as user_id, u.first_name, u.last_name, u.username
         FROM event_enrollments en JOIN users u ON en.id_user = u.id
         ${variables.length > 0 ?  ` AND ${validaciones.join(' AND ')}` : null}`
-        console.log(sql)
-        const response = await this.client.query(sql)
+        return sql
         
     }
 
-    async Consulta5(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user){
-        const sql = `INSERT INTO events (id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user) 
-        values ('${id}', '${name}', '${description}', '${id_event_category}', '${id_envet_location}', '${start_date}', '${duration_in_minutes}', '${price}', '${enabled_for_enrollment}', '${max_assistance}', '${id_creator_user}')`;
+    async Consulta5(evento){
+        const sql = `INSERT INTO events (name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user) 
+        values ('${evento[0]}','${evento[1]}','${evento[2]}','${evento[3]}','${evento[4]}','${evento[5]}','${evento[6]}','${evento[7]}','${evento[8]}','${evento[9]}',)`;
         const respuesta = await this.client.query(sql);
         return respuesta
     }
