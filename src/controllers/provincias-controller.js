@@ -32,7 +32,7 @@ router.get("/", async (request, response) =>{
 })
 
 router.post("/:id", (request, response) => {
-    const name = request.name.id;
+    const name = request.name;
     const full_name = request.body.full_name;
     const latitude = request.body.latitude;
     const longitude = request.body.longitude;
@@ -46,28 +46,42 @@ router.post("/:id", (request, response) => {
     }
 })
 
-router.put("/:id", (request, response) => {
-    const name = request.body.name;
-    const full_name = request.body.full_name;
-    const latitude = request.body.latitude;
-    const longitude = request.body.longitude;
-    const display_order = request.body.display_order;
-    try{
-        const confirmacion = serviceProv.EditarEjercicio7Provincia(request.params.id, name, full_name, latitude, longitude, display_order)
-        return response.json(confirmacion)
-    }catch(error){
-        console.log("Error en actualizacion")
+router.put("/editar", async (request, response) => {
+    const { id,name, full_name, latitude, longitude, display_order } = request.body;
+    try {
+        const confirmacion = await serviceProv.EditarProvincia(id, name, full_name, latitude, longitude, display_order);
+        return response.json(confirmacion);
+    } catch(error) {
+        console.error("Error en actualización:", error);
+        return response.status(500).json({ error: "Error en la actualización de la provincia" });
     }
-})
+});
 
-router.delete("/:id", (request, respose) => {
+
+router.delete("/borrar", (request, respose) => {
     try{
-        const confirmacion = serviceProv.EliminarEjercicio7Provincia(request.params.id)
+        const confirmacion = serviceProv.EliminarProvincia(request.params.id)
         return respose.json(confirmacion)
     }catch(error){
         console.log("Error en la eliminacion de provincia")
         return respose.json("Error en la eliminacion de provincia")
     }
 })
+
+router.post("/crear", async (request, response) => {
+    const { name, full_name, latitude, longitude } = request.body;
+    try {
+      const AutenticarRegistro = await ProvinciasServicios.autenticarRegistro(
+        name,
+        full_name,
+        latitude,
+        longitude
+      );
+      return response.json(AutenticarRegistro);
+    } catch (error) {
+      console.error("Error durante el registro de una provincia:", error);
+      return response.status(500).json({ error: "Error interno del servidor" });
+    }
+  });
 
 export default router

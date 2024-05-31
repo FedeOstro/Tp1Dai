@@ -10,7 +10,7 @@ export default function authorization(req, res, next) {
         DecryptToken(token)
             .then(payload => {
                 if (payload != null) {
-                    req.user = payload; // Establece los datos del usuario en el objeto de solicitud
+                    req.user = payload; 
                     next();
                 } else {
                     res.status(401).send("Error con el Token");

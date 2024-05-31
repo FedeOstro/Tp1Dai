@@ -27,18 +27,17 @@ export default class ProvinciasServicios {
     const provincia = await bd.Consulta2(id);
     const parseProv = provincia.map((row) => {
       const prov = new Object();
-      prov.id = row.id,
-      prov.name = row.name,
-      prov.id_province = row.id_province,
-      prov.latitude = row.latitude,
-      prov.longitude = row.longitude
+      (prov.id = row.id),
+        (prov.name = row.name),
+        (prov.id_province = row.id_province),
+        (prov.latitude = row.latitude),
+        (prov.longitude = row.longitude);
       return {
-        province: prov
+        province: prov,
       };
     });
     return parseProv;
   }
-  
 
   CrearEjercicio7Provincias(
     id,
@@ -57,7 +56,26 @@ export default class ProvinciasServicios {
     }
   }
 
-  EditarEjercicio7Provincia(
+  async autenticarRegistro(name, full_name, latitude, longitude) {
+    const existingProvince = await this.buscarProvinciaPorUsername(name);
+    if (existingProvince) {
+      throw new Error("El nombre de usuario ya está en uso.");
+    }
+    const sql = `
+        INSERT INTO users (name, full_name, latitude, longitude)
+        VALUES ($1, $2, $3, $4)
+        RETURNING *
+    `;
+    const values = [name, full_name, latitude, longitude];
+    try {
+      const rta = await bd.Consulta(sql, values);
+      return rta.rows[0];
+    } catch (error) {
+      throw new Error("Error al registrar usuario: " + error.message);
+    }
+  }
+
+  async EditarProvincia(
     id,
     name,
     full_name,
@@ -66,21 +84,43 @@ export default class ProvinciasServicios {
     display_order
   ) {
     try {
-      bd.Consulta(id, name, full_name, latitude, longitude, display_order);
-      return "Provincia editada con exito";
+      const confirmacion = await bd.Consulta4(
+        id,
+        name,
+        full_name,
+        latitude,
+        longitude,
+        display_order
+      );
+      return "Provincia editada con éxito";
     } catch (error) {
-      console.log("Error edicion de provincia servicio");
-      return response.json("Error edicion de provincia");
+      console.error("Error en la actualización de la provincia:", error);
+      throw new Error("Error en la actualización de la provincia");
     }
   }
 
-  EliminarEjercicio7Provincia(id) {
+  EliminarProvincia(id) {
     try {
-      bd.Consulta(id);
+      bd.Consulta5(id);
       return "Provincia eliminada con exito";
     } catch (error) {
       console.log("Error eliminacion de provincia servicio");
       return response.json("Error eliminacion de provincia");
+    }
+  }
+
+  async buscarProvinciaPorUsername(name) {
+    const sql = `
+        SELECT *
+        FROM provinces
+        WHERE name = $1
+    `;
+    const values = [name];
+    try {
+      const rta = await bd.Consulta(sql, values);
+      return rta.rows[0];
+    } catch (error) {
+      throw new Error("Error al buscar nombre por provincia: " + error.message);
     }
   }
 }
