@@ -251,7 +251,23 @@ export default class EventosServicios{
         if(start_date > )
         return("")
     }
+    
+    async InscripcionEvento(id_creator_user, event_id) {
+        try{
+           const capacidadMax = bd.ConsultaCapacity(event_id)
+           const capacidadActual = bd.consultaCapacidadActual(event_id)
+           if (capacidadActual < capacidadMax){
+            console.log(error)
+           }
+        }catch(error){
 
+        }
+    }
+
+    async DeleteEvent(id) {
+        await repo.DeleteEvent(id);
+        return "Eliminado con éxito";
+    } 
 }  
 
   

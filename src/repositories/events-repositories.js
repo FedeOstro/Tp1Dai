@@ -233,4 +233,8 @@ export default class Bd{
         await this.client.query(sql)
         return
     }   
+
+    async consultaCapacidadActual(event_id){
+        const sql = `select COUNT(*) from event_enrollments where id_event = 2`
+    }
 }   

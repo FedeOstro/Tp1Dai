@@ -175,4 +175,29 @@ router.patch("/:id/enrollment/:rating", AuthMiddleware, async (request, response
     }
 })
 
+router.post("/:id/enrollment", AuthMiddleware, async (request, response) => {
+    const id_creator_user = request.user.id
+    const event_id = request.params.id
+    const max_capacity = request.body.max_capacity
+    const startDate = request.body.start_date
+    const enabledForEnrollment = request.body.enabled_for_enrollment
+    try {
+        await eventEnrollmentService.registrarUsuarioEvento(id_creator_user, event_id, max_capacity,startDate, enabledForEnrollment);
+        return response.status(201).json({message: "El evento se registro correctamente"});
+    } catch (error) {
+        return response.status(400).json({message: "Error a la hora de registrar evento"});
+    }
+});
+
+router.delete("/:id/enrollment", AuthMiddleware, async (request, response) => {
+    const id_creator_user = request.user.id;
+    const event_id = request.params.id;
+    try {
+        await eventEnrollmentService.borrarRegistroUsuarioEvento(id_creator_user, event_id);
+        return response.status(200).json({message: "Usuario del evento eliminado correctamente"});
+    } catch (error) {
+        return response.status(400).json({message: "Error al eliminar el usuario del evento"});
+    }
+});
+
 export default router;
