@@ -228,6 +228,9 @@ export default class Bd{
     }
 
     async Ratiar(id_evento, rating, observations, id_user){
-        const sql = `UPDATE `
-    }
+        const sql = `UPDATE event_enrollments SET attended = true, rating = ${rating} ${observations != null ? `${`, observations = '${observations}', description = '${observations}'`}`: ""} WHERE id_event = ${id_evento} AND id_user = ${id_user}`
+        console.log(sql)
+        await this.client.query(sql)
+        return
+    }   
 }   

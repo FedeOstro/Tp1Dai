@@ -238,6 +238,18 @@ export default class EventosServicios{
 
     async RatiarEvento(id_evento, rating, observations, id_user){
         await bd.Ratiar(id_evento, rating, observations, id_user)
+        return
+    }
+
+    async VerificarEnrollment(id_evento, rating, observations, id_user){
+        const userTa = bd.BusqUser(id_user)
+        if(userTa = 0){
+            return("No esta inscripto el usuario")
+        }
+        const start_date = bd.Consulta3(id_evento)
+        const hoy = 
+        if(start_date > )
+        return("")
     }
 
 }  

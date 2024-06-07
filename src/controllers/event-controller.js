@@ -155,12 +155,17 @@ router.delete("/:id", AuthMiddleware,async (request, response) => {
     }
 })
 
-router.patch("/:id/enrollment/rating", AuthMiddleware, async (request, response) =>{
+router.patch("/:id/enrollment/:rating", AuthMiddleware, async (request, response) =>{
     const id_evento = request.params.id
     const rating = request.params.rating
     const observations = request.body.observations
     const id_user = request.user.id
     try{
+        const msg = eventService.VerificarEnrollment(id_evento, rating, observations, id_user)
+        if(msg.length > 0){
+            response.statusCode = 400
+            return response.json(msg)
+        }
         eventService.RatiarEvento(id_evento, rating, observations, id_user)
         response.statusCode = 200
         return response.json("Se pudo ratiar el evento")
