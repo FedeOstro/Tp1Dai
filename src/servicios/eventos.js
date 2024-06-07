@@ -190,12 +190,54 @@ export default class EventosServicios{
         }
     }
 
-    async ComprobarCapacity(id_creator_user){
+    async ComprobarCapacity(id_event_location){
         try{
-            //Buenas fede del futuro seguro veas y no cases una menos mal que simon del pasado te dijo a vos osea a mi pero del pasado que es mi ahora no tu hoy que pongas este comentario para poder recordarme que esto es para saber la capacidad maxima del evento para comparar tampoco te olvides de comprar 200 g de jamon que mama pidio saludos desde ciudad esmeralda 
+            const max_capacity = bd.ConsultaCapacity(id_event_location)
+            return max_capacity
         }catch{
-
+            console.log("Error service capacity")
+            return response.json("Error servicio capacity")
         }
+    }
+
+    async ChequeosServicios(evento){ 
+        if(evento[0]== null || evento[0].length < 3){
+            return ("Nombre invalido")
+        }
+        if(evento[1] == null || evento[1].length < 3){
+            return ("Descripcion invalida")
+        }
+        const max_capacity = await this.ComprobarCapacity(evento[3])
+        if(Number(evento[8]) > max_capacity[0].max_capacity){
+            return ("Capacidad Maxima invalida")
+        }
+        if(evento[6] < 0){
+            return("Precio invalido menor que 0")
+        }
+        if(evento[5] < 0){
+            return("Duracion invalida menor que 0")
+        }
+        return ("")
+    }
+
+    async ChequeosEvento(id){
+        const event = await bd.Consulta3(id)
+        if(event.length == 0){
+            return("Evento inexistente")
+        }
+        return("")
+    }
+
+    async ChequeosEnrollment(id){
+        const enrollment = await bd.Enrollments(id)
+        if(enrollment[0].count > 0){
+            return("No se puede borrar existen inscriptos")
+        }
+        return("")
+    }
+
+    async RatiarEvento(id_evento, rating, observations, id_user){
+        await bd.Ratiar(id_evento, rating, observations, id_user)
     }
 
 }  

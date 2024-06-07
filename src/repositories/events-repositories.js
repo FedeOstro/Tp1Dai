@@ -102,13 +102,13 @@ export default class Bd{
             FROM tags
         ) AS tags
         FROM events e
-        JOIN users u ON e.id_creator_user = u.id
-        JOIN event_categories ec ON e.id_event_category = ec.id
-        JOIN event_locations el ON e.id_event_location = el.id
-        JOIN event_tags et ON e.id = et.id_event
-        JOIN tags t ON et.id_tag = t.id
-        JOIN locations l ON el.id_location = l.id
-        JOIN provinces p ON l.id_province = p.id
+        LEFT JOIN users u ON e.id_creator_user = u.id
+        LEFT JOIN event_categories ec ON e.id_event_category = ec.id
+        LEFT JOIN event_locations el ON e.id_event_location = el.id
+        LEFT JOIN event_tags et ON e.id = et.id_event
+        LEFT JOIN tags t ON et.id_tag = t.id
+        LEFT JOIN locations l ON el.id_location = l.id
+        LEFT JOIN provinces p ON l.id_province = p.id
         ${variables.length > 0 ?  ` AND ${validaciones.join(' AND ')}` : null}`;
         const groupby = ` GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16, el.id, l.id, p.id`
         const sql2 = sql + groupby
@@ -147,15 +147,17 @@ export default class Bd{
             FROM tags
         ) AS tags
         FROM events e
-        JOIN users u ON e.id_creator_user = u.id
-        JOIN event_categories ec ON e.id_event_category = ec.id
-        JOIN event_locations el ON e.id_event_location = el.id
-        JOIN event_tags et ON e.id = et.id_event
-        JOIN tags t ON et.id_tag = t.id
-        JOIN locations l ON el.id_location = l.id
-        JOIN provinces p ON l.id_province = p.id
+        LEFT JOIN users u ON e.id_creator_user = u.id
+        LEFT JOIN event_categories ec ON e.id_event_category = ec.id
+        LEFT JOIN event_locations el ON e.id_event_location = el.id
+        LEFT JOIN event_tags et ON e.id = et.id_event
+        LEFT JOIN tags t ON et.id_tag = t.id
+        LEFT JOIN locations l ON el.id_location = l.id
+        LEFT JOIN provinces p ON l.id_province = p.id
         WHERE e.id = ${id} GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16, el.id, l.id, p.id`;
+        console.log(sql)
         const respuesta = await this.client.query(sql);
+        
         return respuesta.rows; 
     }
 
@@ -182,23 +184,50 @@ export default class Bd{
     }
 
     async Consulta5(evento){
-        const sql = `INSERT INTO events (name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user) 
-        values ('${evento[0]}','${evento[1]}','${evento[2]}','${evento[3]}','${evento[4]}','${evento[5]}','${evento[6]}','${evento[7]}','${evento[8]}','${evento[9]}',)`;
+        const sql = `INSERT INTO events (name, description, id_event_category, id_event_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user) 
+        values ('${evento[0]}','${evento[1]}','${evento[2]}','${evento[3]}','${evento[4]}','${evento[5]}','${evento[6]}','${evento[7]}','${evento[8]}','${evento[9]}')`;
         const respuesta = await this.client.query(sql);
         return respuesta
     }
 
-    async Consulta6(id, name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user){
-        const sql = `UPDATE events SET id = '${id}', name = '${name}', description = '${description}', id_event_category = '${id_event_category}', id_envet_location = '${id_envet_location}', start_date = '${start_date}', duration_in_minutes = '${duration_in_minutes}', price = '${price}', enabled_for_enrollment = '${enabled_for_enrollment}', max_assistance = '${max_assistance}' 
-        WHERE id = '${id}' AND id_creator_user = '${id_creator_user}'`
+    async Consulta6(evento){
+        const variables = []
+        evento[0] != null ? variables.push(`name = '${evento[0]}'`) : null
+        evento[1] != null ? variables.push(`description = '${evento[1]}'`) : null
+        evento[2] != null ? variables.push(`id_event_category = '${evento[2]}'`) : null 
+        evento[3] != null ? variables.push(`id_event_location = '${evento[3]}'`) : null 
+        evento[4] != null ? variables.push(`start_date = '${evento[4]}'`) : null
+        evento[5] != null ? variables.push(`duration_in_minutes = '${evento[5]}'`) : null
+        evento[6] != null ? variables.push(`price = '${evento[6]}'`) : null
+        evento[7] != null ? variables.push(`enabled_for_enrollment = '${evento[7]}'`) : null 
+        evento[8] != null ? variables.push(`max_assistance = '${evento[8]}'`) : null
+        evento[9] != null ? variables.push(`id_creator_user = '${evento[9]}'`) : null
+        const sql = `UPDATE events SET ${variables.length > 0 ? `${variables.join(' , ')}`: null} WHERE id = ${evento[10]}` 
+        console.log(sql)
         const respuesta = await this.client.query(sql);
         return respuesta
     }
 
-    async Consulta7(id, id_creator_user){
-        const sql = `DELETE * FROM events 
-        WHERE id = '${id}' AND id_creator_user = '${id_creator_user}'`
+    async Consulta7(id){
+        const sql = `DELETE from event_tags where id_event = ${id}; DELETE from events where id = ${id}`
+        console.log(sql)
         const respuesta = await this.client.query(sql);
         return respuesta
+    } 
+
+    async ConsultaCapacity(id_event_location){
+        const sql = `select max_capacity from event_locations where id = '${id_event_location}'`
+        const max_capacity = await this.client.query(sql)
+        return max_capacity.rows
     }
-}
+
+    async Enrollments(id){
+        const sql = `select COUNT(*) from event_enrollments where id_Event = ${id}`
+        const enrollment = await this.client.query(sql)
+        return enrollment.rows
+    }
+
+    async Ratiar(id_evento, rating, observations, id_user){
+        const sql = `UPDATE `
+    }
+}   

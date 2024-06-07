@@ -1,4 +1,4 @@
-import express from "express"
+import express, { request, response } from "express"
 import EventosServicios from "../servicios/eventos.js";    
 const router = express.Router()
 const eventService = new EventosServicios();
@@ -76,29 +76,21 @@ router.post("/", AuthMiddleware, async(request, response) => {
     const name = request.body.name
     const description = request.body.description
     const id_event_category = request.body.id_event_category
-    const id_envet_location = request.body.id_event_location
+    const id_event_location = request.body.id_event_location
     const start_date = request.body.start_date
     const duration_in_minutes = request.body.duration_in_minutes
     const price = request.body.price
     const enabled_for_enrollment = request.body.enabled_for_enrollment
     const max_assistance = request.body.max_assistance
     const id_creator_user = request.user.id
-    const evento = [name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user]
+    const evento = [name, description, id_event_category, id_event_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user]
     try{
-        if(evento[0] == null || evento[0].length < 3){
-            response.statusCode = 400;
-            return response.json("Nombre invalido")
+        const msg = await eventService.ChequeosServicios(evento)
+        if(msg.length > 0){
+            response.statusCode = 400
+            return response.json(msg)
         }
-        if(evento[1] == null || evento[1].length < 3){
-            response.statusCode = 400;
-            return response.json("Descripcion invalida")
-        }
-        const max_capacity = await eventService.ComprobarCapacity(evento[3])
-        if(evento[8] > max_capacity){
-            response.statusCode = 400;
-            return response.json("Capacidad Maxima invalida")
-        }
-        const confirmacion = await eventService.CrearEjercicio8(evento)
+        const confirmacion = await eventService.CrearEjercicio8Eventos(evento)
         if(confirmacion){
             return response.json(confirmacion)
         } else{
@@ -106,8 +98,9 @@ router.post("/", AuthMiddleware, async(request, response) => {
             return response.json("Error en la creacion")
         }
     }catch(error){
+        response.statusCode = 400
         console.log("Error post envento catch")
-        return response.json("Error creacion evento ")
+        return response.json("Error creacion evento faltan parametros para busqueda")
     }
 })
 
@@ -115,20 +108,28 @@ router.put("/", AuthMiddleware,async (request, response) => {
     const name = request.body.name
     const description = request.body.description
     const id_event_category = request.body.id_event_category
-    const id_envet_location = request.body.id_envet_location
+    const id_event_location = request.body.id_event_location
     const start_date = request.body.start_date
     const duration_in_minutes = request.body.duration_in_minutes
     const price = request.body.price
     const enabled_for_enrollment = request.body.enabled_for_enrollment
     const max_assistance = request.body.max_assistance
     const id_creator_user = request.user.id
-    const evento = [name, description, id_event_category, id_envet_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user];
-    console.log(evento[0].length)
+    const id = request.body.id
+    const evento = [name, description, id_event_category, id_event_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user, id];
     try{
-        if(evento[0] || evento[0]){
+        const msg = await eventService.ChequeosServicios(evento)
+        if(msg.length > 0){
+            response.statusCode = 400
+            return response.json(msg)
+        }
+        const msg2 = await eventService.ChequeosEvento(evento[10])
+        if(msg2.length > 0){
+            response.statusCode = 404
+            return response.json(msg2)
         }
         const confirmacion = await eventService.EditarEjercicio8Eventos(evento)
-        if(confirmacion){
+        if(confirmacion){       
             response.statusCode = 201;
             return response.json(confirmacion)
         }
@@ -138,14 +139,34 @@ router.put("/", AuthMiddleware,async (request, response) => {
     } 
 })
 
-router.delete("/:id", AuthMiddleware,(request, response) => {
-    const id_creator_user = request.body.id_creator_user
+router.delete("/:id", AuthMiddleware,async (request, response) => {
     try{
-        const confirmacion = eventService.EliminarEjercicio8Eventos(request.params.id,id_creator_user)
-        return response.json(confirmacion)
+        const msg = await eventService.ChequeosEnrollment(request.params.id)
+        if(msg.length > 0){
+            response.statusCode = 400
+            return response.json(msg)
+        }
+        const confirmacion = eventService.EliminarEjercicio8Eventos(request.params.id)
+        response.statusCode = 200
+        return response.json("Evento borrado con exito")
     }catch(error){
         console.log("Error en el delete eventos")
         return response.json("Error en borrado de evento")
+    }
+})
+
+router.patch("/:id/enrollment/rating", AuthMiddleware, async (request, response) =>{
+    const id_evento = request.params.id
+    const rating = request.params.rating
+    const observations = request.body.observations
+    const id_user = request.user.id
+    try{
+        eventService.RatiarEvento(id_evento, rating, observations, id_user)
+        response.statusCode = 200
+        return response.json("Se pudo ratiar el evento")
+    }catch(error){
+        console.log("Error rating evento controller")
+        return response.json("No se pudo ratiar el evento")
     }
 })
 
