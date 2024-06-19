@@ -155,9 +155,7 @@ export default class Bd{
         LEFT JOIN locations l ON el.id_location = l.id
         LEFT JOIN provinces p ON l.id_province = p.id
         WHERE e.id = ${id} GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16, el.id, l.id, p.id`;
-        console.log(sql)
         const respuesta = await this.client.query(sql);
-        
         return respuesta.rows; 
     }
 
@@ -229,7 +227,6 @@ export default class Bd{
 
     async Ratiar(id_evento, rating, observations, id_user){
         const sql = `UPDATE event_enrollments SET attended = true, rating = ${rating} ${observations != null ? `${`, observations = '${observations}', description = '${observations}'`}`: ""} WHERE id_event = ${id_evento} AND id_user = ${id_user}`
-        console.log(sql)
         await this.client.query(sql)
         return
     }   
@@ -237,4 +234,11 @@ export default class Bd{
     async consultaCapacidadActual(event_id){
         const sql = `select COUNT(*) from event_enrollments where id_event = 2`
     }
+
+    async BusqUser(id_user){
+        const sql = `select * from users where id = '${id_user}'`
+        const user = await this.client.query(sql)
+        return user.rows
+    }
+
 }   

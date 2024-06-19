@@ -9,16 +9,34 @@ const UsuarioServicios = new UsuarioServicios1();
 
 router.post("/login", async (request, response) => {
   const { username, password } = request.body;
+  let message = ""
+  let success = ""
   try {
+    const regex = /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
+    if(regex.test(username)){
+      success = true
+    }else{
+      return response.status(400).json({
+        success: false,
+        message: "El email es invalido.",
+        token: ""
+      })
+    }
     const usuario = await UsuarioServicios.autenticarUsuario(
       username,
       password
     );
     if (!usuario) {
-      return response.status(401).json({ error: "Credenciales inválidas" });
+      return response.status(401).json({ 
+        success: false,
+        message: "Usuario o clave inválida",
+        token: ""});
     }
     const token = await generarToken(usuario);
-    return response.json({ token });
+    return response.json({ 
+      success: true,
+      message : "",
+      token });
   } catch (error) {
     console.error("Error durante el inicio de sesión:", error);
     return response.status(500).json({ error: "Error interno del servidor" });

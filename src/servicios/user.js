@@ -23,11 +23,9 @@ export default class UsuarioServicios {
         if (existingUser) {
             throw new Error("El nombre de usuario ya está en uso.");
         }
-    
         const sql = `
             INSERT INTO users (first_name, last_name, username, password)
-            VALUES ($1, $2, $3, $4)
-            RETURNING *
+            VALUES ('${first_name}', '${last_name}', '${username}', '${password}')
         `;
         const values = [first_name, last_name, username, password];
         try {

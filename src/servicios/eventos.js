@@ -242,14 +242,13 @@ export default class EventosServicios{
     }
 
     async VerificarEnrollment(id_evento, rating, observations, id_user){
-        const userTa = bd.BusqUser(id_user)
-        if(userTa = 0){
+        const userTa = await bd.BusqUser(id_user)
+        if(userTa == null){
             return("No esta inscripto el usuario")
         }
-        const start_date = bd.Consulta3(id_evento)
-        const hoy = 
-        if(start_date > )
-        return("")
+        const event = await bd.Consulta3(id_evento)
+        const start_date = event[0].start_date
+        return start_date
     }
     
     async InscripcionEvento(id_creator_user, event_id) {
