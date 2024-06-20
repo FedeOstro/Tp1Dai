@@ -247,8 +247,18 @@ export default class EventosServicios{
             return("No esta inscripto el usuario")
         }
         const event = await bd.Consulta3(id_evento)
+        if(event == null){
+            return false
+        }
         const start_date = event[0].start_date
-        return start_date
+        const hoy = new Date()
+        if(start_date < hoy){
+            return("Error el eventon no a finalizado")
+        }
+        if(rating < 1 && rating > 10){
+            return("Error rating ingresado invalido se debe encontrar entre 1 y 10")
+        }
+        return true
     }
     
     async InscripcionEvento(id_creator_user, event_id) {
