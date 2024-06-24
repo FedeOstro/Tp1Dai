@@ -3,53 +3,45 @@ const bd = new Bd();
 
 
 export default class UsuarioServicios {
-    async autenticarUsuario(username, password) {
-        const sql = `
-            SELECT *
-            FROM users
-            WHERE username = $1 AND password = $2
-        `;
-        const values = [username, password];
+    async login(username, password) {
         try {
-            const rta = await bd.Consulta(sql, values);
-            return rta.rows[0];
+            const usuario = await usuariosRepositorio.buscarUsuarioPorUsername(username);
+
+            if (!usuario) {
+                console.log(error)
+            }
+
+            if (password !== usuario.password) {
+                console.log(error)
+            }
+
         } catch (error) {
-            throw new Error("Error al autenticar usuario: " + error.message);
+            console.error('Error durante el inicio de sesión:');
+            throw new Error('Error interno del servidor');
         }
     }
 
-    async autenticarRegistro(first_name, last_name, username, password) {
-        const existingUser = await this.buscarUsuarioPorUsername(username);
-        if (existingUser) {
-            throw new Error("El nombre de usuario ya está en uso.");
-        }
-        const sql = `
-            INSERT INTO users (first_name, last_name, username, password)
-            VALUES ('${first_name}', '${last_name}', '${username}', '${password}')
-        `;
-        const values = [first_name, last_name, username, password];
+    async register(firstName, lastName, username, password) {
         try {
-            const rta = await bd.Consulta(sql, values);
-            return rta.rows[0];
+            if (firstName.length < 3 || lastName.length < 3) {
+                throw new Error('Los campos first_name o last_name deben tener al menos tres caracteres.');
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(username)) {
+                throw new Error('El email es inválido.');
+            }
+
+            if (password.length < 3) {
+                throw new Error('El campo password debe tener al menos tres caracteres.');
+            }
+
+            const userId = await usuariosRepositorio.create(firstName, lastName, username, password);
+
+            return { success: true, message: 'Usuario creado con éxito.'};
         } catch (error) {
-            throw new Error("Error al registrar usuario: " + error.message);
+            console.error('Error durante el registro de usuario:');
+            throw new Error('Error interno del servidor');
         }
     }
-    
-    
-
-    async buscarUsuarioPorUsername(username) {
-        const sql = `
-            SELECT *
-            FROM users
-            WHERE username = $1
-        `;
-        const values = [username];
-        try {
-            const rta = await bd.Consulta(sql, values); 
-            return rta.rows[0];
-        } catch (error) {
-            throw new Error("Error al buscar usuario por nombre de usuario: " + error.message);
-        }
-    }    
 }
