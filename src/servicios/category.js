@@ -1,4 +1,3 @@
-import res from "express/lib/response.js";
 import Bd from "../repositories/category-respositories.js";
 const bd = new Bd();
 
@@ -13,10 +12,12 @@ export default class locationServicios{
     }
 
     async cheq(name, id){
+        const limit = this.parsedLimit(0)
+        const offset = this.parsedOffset(0)
         if(name.lenght < 3 || name == null){
             return 400
         }else if(id != null){
-            const category = await Bd.Consulta2(id)
+            const category = await bd.consulta2(id,limit, offset)
             if(category == null){
                 return 404
             }
@@ -25,10 +26,10 @@ export default class locationServicios{
         }
     }
 
-    async GetAllCategoryes(limit, offset, url){
-        const limit = this.parsedLimit(limit)
-        const offset = this.parsedOffset(offset)
-        const result = await bd.Consulta1(limit, offset);
+    async GetAllCategoryes(limit, offset, path){
+        const limited = this.parsedLimit(limit)
+        const offseted = this.parsedOffset(offset)
+        const result = await bd.consulta1(limited, offseted);
         const totalCount = result.length
         const parsedDB = result.map(row => {
             var event_categories = new Object()
@@ -38,20 +39,20 @@ export default class locationServicios{
             return{
                 event_categories: event_categories,
                 pagination: {
-                    limit: pageSizes,
-                    offset: requestedPages,
-                    nextPage: ((requestedPages + 1) * pageSizes <= totalCount) ? `${process.env.BASE_URL}/${path}?limit=${pageSizes}&offset=${requestedPages + 1}` : null,
-                    total: totalCount,   
-                }
+                    limit: limit,
+                    offset: limit,
+                    nextPage: ((offset + 1) * limit <= totalCount) ? `${process.env.BASE_URL}/${path}?limit=${limit}&offset=${offset + 1}` : null,
+                },
+                total: totalCount,   
             }
         })
         return parsedDB
     }
 
-    async ConsultCategory(id,limit, offset, url){
-        const limit = this.parsedLimit(limit)
-        const offset = this.parsedOffset(offset)
-        const result = await bd.Consulta2(limit, offset, id)
+    async ConsultCategory(id,limit, offset, path){
+        const limited = this.parsedLimit(limit)
+        const offseted = this.parsedOffset(offset)
+        const result = await bd.consulta2(id, limited, offseted)
         const totalCount = result.lenght
         const parsedDB = result.map(row => {
             var event_categories = new Object()
@@ -61,10 +62,10 @@ export default class locationServicios{
             return{
                 event_categories: event_categories,
                 pagination: {
-                    limit: pageSizes,
-                    offset: requestedPages,
-                    nextPage: ((requestedPages + 1) * pageSizes <= totalCount) ? `${process.env.BASE_URL}/${path}?limit=${pageSizes}&offset=${requestedPages + 1}` : null,
-                    total: totalCount,   
+                    limit: limited,
+                    offset: offseted,
+                    nextPage: ((offseted + 1) * limited <= totalCount) ? `${process.env.BASE_URL}/${path}?limit=${limited}&offset=${offseted + 1}` : null,
+                    total: totalCount
                 }
             }
         })
@@ -73,12 +74,17 @@ export default class locationServicios{
 
     async postCategory(name, display_order){
         const result = await bd.consulta3(name, display_order)
-        return result
+        return ("Insetado efectivamente")
     }
 
-    async putCategory(name, display_order){
-        const result = await bd.Consulta4(name, display_order)
-        return result
+    async putCategory(id,name, display_order){
+        const result = await bd.consulta4(id, name, display_order)
+        return ("Actualizado efectivamente")
+    }
+
+    async deleteCategory(id){
+        const result = await bd.consulta5(id)
+        return ("Borrado efectivamente")
     }
 
 }
