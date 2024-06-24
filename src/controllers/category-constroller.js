@@ -41,7 +41,7 @@ router.post("/", async (request, response) =>{
     const name = request.body.name
     const display_order = request.body.display_order
     try{
-        const err = categoryServices.cheq(name)
+        const err = categoryServices.cheq(name, display_order)
         if(err == 400){
             response.statusCode = 400
             return response.json("Nombre invalido vacio o menor de 3 caracteres")
