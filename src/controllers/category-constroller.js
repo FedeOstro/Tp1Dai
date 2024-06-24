@@ -92,3 +92,5 @@ router.delete("/:id", async (request, response) => {
         return response.json("Error delete category")
     }
 })
+
+export default router

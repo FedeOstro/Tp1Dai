@@ -1,5 +1,5 @@
 import express from "express";
-import UsuarioServicios from "../servicios/UsuarioServicios.js";
+import UsuarioServicios from "../servicios/user.js";
 import generarToken from "../auth/token.js"; 
 import AuthMiddleware from "../auth/AuthMiddleware.js"; 
 

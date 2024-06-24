@@ -57,3 +57,5 @@ router.get("/:id/event-location", AuthMiddleware, async (request, response) => {
         return response.json("No se encontro localizacion")
     }
 })
+
+export default router
