@@ -2,8 +2,9 @@ import express, { request, response } from "express"
 import eventService from "../servicios/event-location.js";    
 const router = express.Router()
 const eventLocationsService = new eventService();
+import AuthMiddleware from "../auth/AuthMiddleware.js"; 
 
-router.get("/",  async (request, response) => {
+router.get("/",  AuthMiddleware ,async (request, response) => {
     const limit = request.query.limit;
     const offset = request.query.offset;
     const url = request.originalUrl;
@@ -17,7 +18,7 @@ router.get("/",  async (request, response) => {
     }
 })
 
-router.get("/:id", async (request, response) =>{
+router.get("/:id", AuthMiddleware ,async (request, response) =>{
     const limit = request.query.limit;
     const offset = request.query.offset;
     const url = request.originalUrl;
@@ -37,7 +38,7 @@ router.get("/:id", async (request, response) =>{
     }
 })
 
-router.post("/", async (request, response) =>{
+router.post("/", AuthMiddleware,async (request, response) =>{
     const name = request.body.name
     const display_order = request.body.display_order
     try{
@@ -55,7 +56,7 @@ router.post("/", async (request, response) =>{
     }
 })
 
-router.put("/", async (request, response) => {
+router.put("/", AuthMiddleware ,async (request, response) => {
     const id = request.body.id
     const name = request.body.name
     const display_order = request.body.display_order
@@ -77,7 +78,7 @@ router.put("/", async (request, response) => {
     }
 })
 
-router.delete("/:id", async (request, response) => {
+router.delete("/:id", AuthMiddleware,async (request, response) => {
     try{
         const err = eventLocationsService.cheq("aaaa", request.params.id)
         if(err == 404){

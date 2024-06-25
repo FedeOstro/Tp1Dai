@@ -7,28 +7,31 @@ router.get("/", async (request, response) =>{
     const id = request.query.id;
     const limit = request.query.limit;
     const offset = request.query.offset;
-    if(limit != null || offset != null){
-        try{
-            const todoProvincias = await serviceProv.ObtencionProvincias()
-            if(todoProvincias){
-                return response.json(todoseventos);
+    try{
+        if(id != null){
+            try{
+                const provinciaId = await serviceProv.ObtencionProvinciasID(id)
+                return response.json(provinciaId);
+            }catch(error){
+                console.log("Error obtencion provincias id")
+                return response.json("Error en la obtencion de la provincia con id")
             }
-        }catch(error){
-            console.log("Error obtencion provincias")
-            return response.json("Error obtenicon de las provincias 7")
+            
+        }else{
+            try{
+                const todoProvincias = await serviceProv.ObtencionProvincias(limit, offset)
+                if(todoProvincias){
+                    return response.json(todoProvincias);
+                }
+            }catch(error){
+                console.log("Error obtencion provincias")
+                return response.json("Error obtenicon de las provincias 7")
+            }
         }
-    }else if(id != null){
-        try{
-            const provinciaId = await serviceProv.ObtencionProvinciasID(id)
-            return response.json(provinciaId);
-        }catch(error){
-            console.log("Error obtencion provincias id")
-            return response.json("Error en la obtencion de la provincia con id")
-        }
-    }else{
+    }catch(error){
         console.log("Error en toda obtencion")
         return response.json("Error en toda manera de obtencion")
-    }
+    }   
 })
 
 router.post("/:id", (request, response) => {
