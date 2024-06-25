@@ -8,26 +8,11 @@ export default class Bd {
         this.client.connect();
     }
 
-    async Consulta(sql, values = []) {
-        try {
-            const respuesta = await this.client.query(sql, values);
-            return respuesta;
-        } catch (error) {
-            throw new Error("Error al realizar la consulta: " + error.message);
-        }
-    }
-
      async autenticarUsuario(username, password) {
-        const sql = `
-            SELECT *
-            FROM users
-            WHERE username = $1 AND password = $2
-        `;
-        const values = [username, password];
-        
+        const sql = `SELECT * FROM users WHERE username = '${username}' AND password = '${password}' `;        
         try {
-            const respuesta = await pool.query(sql, values);
-            return respuesta.rows[0];
+            const respuesta = await this.client.query(sql);
+            return respuesta.rows;
         } catch (error) {
             console.error("Error al autenticar usuario:", error);
             throw new Error("Error al autenticar usuario");
@@ -35,20 +20,14 @@ export default class Bd {
     }
 
     async autenticarRegistro(first_name, last_name, username, password) {
-        const existingUser = await this.buscarUsuarioPorUsername(username);
-        if (existingUser) {
-            throw new Error("El nombre de usuario ya está en uso.");
-        }
-
-        const sql = `
-            INSERT INTO users (first_name, last_name, username, password)
-            VALUES ($1, $2, $3, $4)
-            RETURNING id
-        `;
-        const values = [first_name, last_name, username, password];
-
+        const num = await this.cantUsuarios()
+        let id = parseInt(num[0].count)
+        const sql = `INSERT INTO users (id, first_name, last_name, username, password)
+            VALUES ('${id+1}', '${first_name}', '${last_name}', '${username}', '${password}')
+            RETURNING id`;
+            console.log(sql)
         try {
-            const respuesta = await pool.query(sql, values);
+            const respuesta = await this.client.query(sql);
             return respuesta.rows[0].id;
         } catch (error) {
             console.error("Error al registrar usuario:", error);
@@ -57,19 +36,24 @@ export default class Bd {
     }
 
     async buscarUsuarioPorUsername(username) {
-        const sql = `
-            SELECT *
-            FROM users
-            WHERE username = $1
-        `;
-        const values = [username];
-
+        const sql = `SELECT * FROM users WHERE username = '${username}' `
         try {
-            const respuesta = await pool.query(sql, values);
-            return respuesta.rows[0];
+            const respuesta = await this.client.query(sql);
+            return respuesta.rows;
         } catch (error) {
             console.error("Error al buscar usuario por nombre de usuario:", error);
             throw new Error("Error al buscar usuario por nombre de usuario");
+        }
+    }
+
+    async cantUsuarios(){
+        const sql = `SELECT COUNT(*) FROM users`
+        try{
+            const num = await this.client.query(sql)
+            return num.rows
+        } catch(error){
+            console.error("Error contando usuarios")
+            return("Error contando usuarios")
         }
     }
 }
