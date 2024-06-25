@@ -1,3 +1,4 @@
+Repositorio
 import pg from 'pg';
 import { bdconfig } from './BD_Config.js';
 import { query } from 'express';
@@ -18,26 +19,50 @@ export default class Bd{
     }
     
     async consulta2(id, limit, offset){
-        const bd = `SELECT * FROM event_locations WHERE id = '${id}' limit '${limit}' offset '${offset}'`
+        const bd = `SELECT * FROM event_locations WHERE id_location = '${id}' limit '${limit}' offset '${offset}'`
         const respuesta = await this.client.query(bd)
         return respuesta.rows
     }
 
-    async consulta3(name, display_order){
-        const bd = `INSERT INTO event_locations (name, display_order) values ('${name}', '${display_order}')`
+    async consulta3(name, full_address, max_capacity, latitude, longitude, id_creator_user){
+        const num1 = await this.cantEventos()
+        let id_location = parseInt(num1[0].count)
+        console.log(id_creator_user)
+        const bd = `INSERT INTO event_locations (id_location, name, full_address, max_capacity, latitude, longitude, id_creator_user) values ('${id_location+1}', '${name}', '${full_address}', '${max_capacity}', '${latitude}', '${longitude}', '${id_creator_user}')`
         const rta = await this.client.query(bd)
         return rta
     }
 
-    async consulta4(id, name, display_order){
-        const bd = `UPDATE event_locations SET name = '${name}', display_order = '${display_order}' WHERE id = '${id}'`
+    async consulta4(id,name, full_address, max_capacity, latitude, longitude){
+        const bd = `UPDATE event_locations SET name = '${name}', ' WHERE id = '${id}'`
         const rta = await this.client.query(bd)
         return rta
     }
-
+        // Hacer
     async consulta5(id){
         const bd = `DELETE FROM event_locations WHERE id = '${id}'`
         const rta = await this.client.query(bd)
         return rta
+    }
+
+    async cantEventos(){
+        const sql = `SELECT COUNT(*) FROM event_locations`
+        try{
+            const num = await this.client.query(sql)
+            return num.rows
+        } catch(error){
+            console.error("Error contando usuarios")
+            return("Error contando usuarios")
+        }
+    }
+    async idCreatorUser(){
+        const sql = `select id_creator_user from event_locations `
+        try{
+            const num = await this.client.query(sql)
+            return num.rows
+        } catch(error){
+            console.error("Error contando usuarios")
+            return("Error contando usuarios")
+        }
     }
 }

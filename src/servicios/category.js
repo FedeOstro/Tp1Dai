@@ -39,11 +39,11 @@ export default class locationServicios{
             return{
                 event_categories: event_categories,
                 pagination: {
-                    limit: limit,
-                    offset: limit,
-                    nextPage: ((offset + 1) * limit <= totalCount) ? `${process.env.BASE_URL}/${path}?limit=${limit}&offset=${offset + 1}` : null,
+                    limit: limited,
+                    offset: offseted,
+                    nextPage: ((offseted + 1) * limited <= totalCount) ? `${process.env.BASE_URL}/${path}?limit=${limited}&offset=${offseted + 1}` : null,
+                    total: totalCount,
                 },
-                total: totalCount,   
             }
         })
         return parsedDB

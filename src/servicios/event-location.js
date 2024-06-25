@@ -11,18 +11,22 @@ export default class locationServicios{
         return !isNaN(parseInt(limit)) ? parseInt(limit) : 15; 
     }
 
-    async cheq(name, id){
+    async cheq(id_location, name, full_address, max_capacity){
         const limit = this.parsedLimit(0)
         const offset = this.parsedOffset(0)
         if(name.lenght < 3 || name == null){
             return 400
-        }else if(id != null){
-            const category = await bd.consulta2(id,limit, offset)
-            if(category == null){
+        }else if(full_address < 3 || full_address == null){
+            return 400
+        }else if (id_location != null){
+            const event = await bd.consulta2(id_location,limit, offset)
+            if(event == null){
                 return 404
             }
+        }else if (max_capacity <= 0){
+            return "400"
         }else{
-            return "salchipapa"
+            return "salcipapa"
         }
     }
 
@@ -34,16 +38,20 @@ export default class locationServicios{
         const parsedDB = result.map(row => {
             var event_locations = new Object()
             event_locations.id = row.id
+            event_locations.id_location = row.id_location
             event_locations.name = row.name
-            event_locations.display_order = row.display_order
+            event_locations.full_address = row.full_address
+            event_locations.max_capacity = row.max_capacity
+            event_locations.latitude = row.latitude
+            event_locations.longitude = row.longitude
             return{
                 event_locations: event_locations,
                 pagination: {
-                    limit: limit,
-                    offset: limit,
-                    nextPage: ((offset + 1) * limit <= totalCount) ? `${process.env.BASE_URL}/${path}?limit=${limit}&offset=${offset + 1}` : null,
+                    limit: limited,
+                    offset: offseted,
+                    nextPage: ((offseted + 1) * limited <= totalCount) ? `${process.env.BASE_URL}/${path}?limit=${limited}&offset=${offseted + 1}` : null,
+                    total: totalCount
                 },
-                total: totalCount,   
             }
         })
         return parsedDB
@@ -57,8 +65,12 @@ export default class locationServicios{
         const parsedDB = result.map(row => {
             var event_locations = new Object()
             event_locations.id = row.id
+            event_locations.id_location = row.id_location
             event_locations.name = row.name
-            event_locations.display_order = row.display_order
+            event_locations.full_address = row.full_address
+            event_locations.max_capacity = row.max_capacity
+            event_locations.latitude = row.latitude
+            event_locations.longitude = row.longitude
             return{
                 event_locations: event_locations,
                 pagination: {
@@ -66,19 +78,19 @@ export default class locationServicios{
                     offset: offseted,
                     nextPage: ((offseted + 1) * limited <= totalCount) ? `${process.env.BASE_URL}/${path}?limit=${limited}&offset=${offseted + 1}` : null,
                     total: totalCount
-                }
+                },
             }
         })
         return parsedDB
     }
 
-    async postCategory(name, display_order){
-        const result = await bd.consulta3(name, display_order)
+    async postEvento(name, full_address, max_capacity, latitude, longitude, id_creator_user){
+        const result = await bd.consulta3(name, full_address, max_capacity, latitude, longitude, id_creator_user)
         return ("Insetado efectivamente")
     }
 
-    async putCategory(id,name, display_order){
-        const result = await bd.consulta4(id, name, display_order)
+    async putEvento(id,name, full_address, max_capacity, latitude, longitude){
+        const result = await bd.consulta4(id,name, full_address, max_capacity, latitude, longitude)
         return ("Actualizado efectivamente")
     }
 
