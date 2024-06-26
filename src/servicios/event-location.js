@@ -94,9 +94,13 @@ export default class locationServicios{
         return ("Actualizado efectivamente")
     }
 
-    async deleteCategory(id){
+    async deleteEvento(id){
+        const event = await bd.consulta6(id)
+        if (event != null){
         const result = await bd.consulta5(id)
         return ("Borrado efectivamente")
+        }else{
+            return 404
+        }
     }
-
 }
