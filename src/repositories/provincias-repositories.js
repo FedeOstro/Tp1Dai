@@ -21,9 +21,15 @@ export default class Bd{
         return respuesta.rows
     }
     
-    async Consulta3(id, name, full_name, latitude, longitude, display_order){
-        const sql = `INSERT INTO provinces (id, name, full_name, latitude, longitude, display_order) 
-        values (${id}, ${name}, ${full_name}, ${latitude}, ${longitude}, ${display_order})`
+    async locationsXid(id, limit, offset){
+        const sql = `SELECT * FROM locations WHERE id_province = '${id}' limit '${limit}' offset '${offset}'`
+        const rta = await this.client.query(sql)
+        return rta.rows
+    }
+
+    async Consulta3(name, full_name, latitude, longitude, display_order){
+        const sql = `INSERT INTO provinces (name, full_name, latitude, longitude, display_order) 
+        values (${name}, ${full_name}, ${latitude}, ${longitude}, ${display_order})`
         const respuesta = await this.client.query(sql);
         return respuesta
     }
