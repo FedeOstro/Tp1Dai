@@ -86,6 +86,7 @@ router.put("/", AuthMiddleware ,async (request, response) => {
 })
 
 router.delete("/:id", AuthMiddleware ,async (request, response) => {
+    console.log("Hola")
     try{
         const id = request.params.id  
         const msg = await eventLocationsService.deleteEvento(id)

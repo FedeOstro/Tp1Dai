@@ -39,8 +39,14 @@ export default class Bd{
     }
         // Hacer
     
-    async consulta5(id){ //No funciona la cascada
-        const bd = `DELETE FROM event_enrollments WHERE id_user = '${id}';DELETE FROM event_tags WHERE id_event = '${id}';DELETE FROM events WHERE id_event_location = '${id}';DELETE FROM event_locations WHERE id = '${id}'`
+    async consulta5(id){ 
+        const sql = `SELECT id FROM events WHERE id_event_location = '${id}'`
+        const idevent = await this.client.query(sql)
+        console.log(idevent)
+        const bd = `DELETE FROM event_enrollments WHERE id_event = '${idevent}';
+        DELETE FROM event_tags WHERE '${idevent}';
+        DELETE FROM events WHERE id_event_location =  '${id}';
+        DELETE FROM event_locations WHERE id =  '${id}'`
         const rta = await this.client.query(bd)
         return rta
     }
