@@ -1,4 +1,3 @@
-Controller
 import express, { request, response } from "express"
 import eventService from "../servicios/event-location.js";    
 const router = express.Router()

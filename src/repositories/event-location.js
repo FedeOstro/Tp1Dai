@@ -1,4 +1,3 @@
-Repositorio
 import pg from 'pg';
 import { bdconfig } from './BD_Config.js';
 import { query } from 'express';
