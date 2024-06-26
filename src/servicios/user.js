@@ -6,11 +6,11 @@ export default class UsuarioServicios {
     async login(username, password) {
         try {
             const usuario = await bd.buscarUsuarioPorUsername(username);
-            if (!usuario) {
-                console.log(error)
+            if (usuario[0] == null) {
+                return 400
             }
-            if (password !== usuario.password) {
-                console.log(error)
+            if (password != usuario[0].password) {
+                return 401
             }
             return usuario
         } catch (error) {
