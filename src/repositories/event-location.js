@@ -33,7 +33,7 @@ export default class Bd{
     }
 
     async consulta4(id,name, full_address, max_capacity, latitude, longitude){
-        const bd = `UPDATE event_locations SET name = '${name}', ' WHERE id = '${id}'`
+        const bd = `UPDATE event_locations SET name = '${name}', full_address = '${full_address}', max_capacity = '${max_capacity}', latitude = '${latitude}', longitude = '${longitude}' WHERE id = '${id}'`
         const rta = await this.client.query(bd)
         return rta
     }

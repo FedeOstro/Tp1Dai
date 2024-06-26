@@ -19,7 +19,7 @@ export default class locationServicios{
         }else if(full_address < 3 || full_address == null){
             return 400
         }else if (id_location != null){
-            const event = await bd.consulta2(id_location,limit, offset)
+            const event = await bd.consulta2(id_location, limit, offset)
             if(event == null){
                 return 404
             }

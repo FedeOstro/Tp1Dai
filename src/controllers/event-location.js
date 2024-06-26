@@ -46,7 +46,7 @@ router.post("/", AuthMiddleware, async (request, response) =>{
     const longitude = request.body.longitude
     const id_creator_user = request.user.id
     try{
-        const err = eventLocationsService.cheq(name, full_address, max_capacity)
+        const err = eventLocationsService.cheq(id_creator_user, name, full_address, max_capacity)
         if(err == 400){
             response.statusCode = 400
             return response.json("Nombre invalido vacio o menor de 3 caracteres")
@@ -68,7 +68,7 @@ router.put("/", AuthMiddleware ,async (request, response) => {
     const latitude = request.body.latitude
     const longitude = request.body.longitude
     try{
-        const err = eventLocationsService.cheq(id_location, name, full_address, max_capacity)
+        const err = eventLocationsService.cheq(id, name, full_address, max_capacity)
         if(err == 400){
             response.statusCode = err
             return response.json("Nombre invalido vacio o menor de 3 caracteres")
