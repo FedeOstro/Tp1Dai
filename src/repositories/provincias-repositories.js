@@ -12,14 +12,14 @@ export default class Bd{
     async Consulta1(limited, offseted) {
         const sql = `SELECT * from provinces limit '${limited}' offset '${offseted}'`
         const respuesta = await this.client.query(sql);
-        return respuesta.rows;
+        return respuesta.rows
     }
     
     async Consulta2(id){
         const sql = `SELECT * from provinces WHERE id = ${id}`
         const respuesta = await this.client.query(sql);
         return respuesta.rows
-    }
+    } 
     
     async locationsXid(id, limit, offset){
         const sql = `SELECT * FROM locations WHERE id_province = '${id}' limit '${limit}' offset '${offset}'`
@@ -29,7 +29,7 @@ export default class Bd{
 
     async Consulta3(name, full_name, latitude, longitude, display_order){
         const sql = `INSERT INTO provinces (name, full_name, latitude, longitude, display_order) 
-        values (${name}, ${full_name}, ${latitude}, ${longitude}, ${display_order})`
+        values ('${name}', '${full_name}', '${latitude}', '${longitude}', '${display_order}')`
         const respuesta = await this.client.query(sql);
         return respuesta
     }

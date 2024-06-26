@@ -11,42 +11,44 @@ export default class ProvinciasServicios {
     return !isNaN(parseInt(limit)) ? parseInt(limit) : 15; 
   }
 
-  async ObtencionProvincias(pageSize, requestedPage) {
+  async ObtencionProvincias(pageSize, requestedPage, path) {
     const limited = this.parsedLimit(pageSize)
     const offseted = this.parsedOffset(requestedPage)
     const provincias = await bd.Consulta1(limited, offseted);
-    console.log(provincias)
-    parseProv = provincias.map((row) => {
-      var provinciasr = new Object();
-      provinciasr.id = row.id;
-      provinciasr.name = row.name;
-      provinciasr.full_name = row.full_name;
-      provinciasr.latitude = row.latitude;
-      provinciasr.longitude = row.longitude;
+    const totalCount = provincias.length
+    const collection = provincias.map(row => {
       return {
-        collection: parseProv,
-        pagination: {
+        id: row.id,
+        name: row.name,
+        full_name: row.full_name,
+        latitude: row.latitude,
+        longitude: row.longitude
+      };
+  });
+  const result = {
+      collection: collection,
+      pagination: {
           limit: limited,
           offset: offseted,
           nextPage: ((offseted + 1) * limited <= totalCount) ? `${process.env.BASE_URL}/${path}?limit=${limited}&offset=${offseted + 1}` : null,
-        },
-      };
-    });
-    return parseProv;
-  }
+          totalCount: totalCount
+      }
+  };
+  return result;
+}
 
   async ObtencionProvinciasID(id) {
     const provincia = await bd.Consulta2(id);
-    if(provincia[0] == null){
+    if(provincia.length <= 0){
       return false
     }
-    const parseProv = provincia.map((row) => {
+    const parseProv = provincia.map(row => {
       const prov = new Object();
-        prov.id = row.id,
-        prov.name = row.name,
-        prov.id_province = row.id_province,
-        prov.latitude = row.latitude,
-        prov.longitude = row.longitude;
+      prov.id = row.id,
+      prov.name = row.name,
+      prov.id_province = row.id_province,
+      prov.latitude = row.latitude,
+      prov.longitude = row.longitude;
       return {
         province: prov,
       };
@@ -54,31 +56,33 @@ export default class ProvinciasServicios {
     return parseProv;
   }
 
-  async busqLocations(id, limit, offset){
+  async busqLocations(id, limit, offset, path){
     const limited = this.parsedLimit(limit)
     const offseted = this.parsedOffset(offset)
-    const locations = await bd.locationsXid(id);
-    if(locations[0] == null){
+    const locations = await bd.locationsXid(id, limited, offseted);                                                                            
+    const totalCount = locations.length
+    if(totalCount <= 0){
       return false
     }
-    const parsedDB = result.map(row => {
-      const location = new Object()
-      location.id = row.id
-      location.name = row.name
-      location.id_province = row.id_province
-      location.latitude = row.latitude
-      location.longitude = row.longitude
-      return{
-          collection: location,
-          pagination: {
-              limit: limited,
-              offset: offseted,
-              nextPage: ((offseted + 1) * limited <= totalCount) ? `${process.env.BASE_URL}/${path}?limit=${limited}&offset=${offseted + 1}` : null,
-              total: totalCount,   
-          }
+    const parsedDB = locations.map(row => {
+    return{
+      id : row.id,
+      name : row.name,
+      id_province : row.id_province,
+      latitude : row.latitude,
+      longitude : row.longitude,
       }
     })
-    return parsedDB;
+    const result = {
+      collection: parsedDB,
+      pagination: {
+        limit: limited,
+        offset: offseted,
+        nextPage: ((offseted + 1) * limited <= totalCount) ? `${process.env.BASE_URL}/${path}?limit=${limited}&offset=${offseted + 1}` : null,
+        total: totalCount,   
+      }
+    }
+    return result
   }
 
   esNumero(value) {
@@ -87,7 +91,7 @@ export default class ProvinciasServicios {
 
   async cheqProv(name, longitude, latitude){
     if(name.length < 3 || name.length < 3) {
-      return("Los campos first_name o last_name deben tener al menos tres caracteres.");
+      return("El campo first_name  deben tener al menos tres caracteres.");
     }
     if(this.esNumero(longitude) == false){
       return("Longitud invalida no es un numero")
@@ -104,7 +108,7 @@ export default class ProvinciasServicios {
       return "Provincia creada con exito";
     } catch (error) {
       console.log("Error creacion de provincia servicio");
-      return response.json("Error creacion de provincia");
+      return ("Error creacion de provincia");
     }
   }
 
@@ -125,15 +129,16 @@ export default class ProvinciasServicios {
 
   async EditarProvincia(id, name,full_name, latitude, longitude, display_order ) {
     const cheq = await bd.Consulta2(id)
+    console.log(cheq)
     if(cheq[0] == null){
       return 404
     }
     try {
       const confirmacion = await bd.Consulta4(id, name, full_name, latitude, longitude, display_order);
-      return "Provincia editada con éxito";
+      return ("Provincia editada con éxito");
     } catch (error) {
       console.error("Error en la actualización de la provincia:", error);
-      throw new Error("Error en la actualización de la provincia");
+      return("Error en la actualización de la provincia");
     }
   }
 

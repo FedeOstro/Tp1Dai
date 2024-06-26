@@ -1,14 +1,15 @@
 import express, { response } from "express"
 import ProvinciasServicios from "../servicios/provincias.js";
+import req from "express/lib/request.js";
 const router = express.Router()
 const serviceProv = new ProvinciasServicios();
 
 router.get("/", async (request, response) =>{
-    const id = request.query.id;
     const limit = request.query.limit;
     const offset = request.query.offset;
+    const url = request.originalUrl
     try{
-        const todoProvincias = await serviceProv.ObtencionProvincias(limit, offset)
+        const todoProvincias = await serviceProv.ObtencionProvincias(limit, offset, url)
         if(todoProvincias){
             response.statusCode = 200
             return response.json(todoProvincias);
@@ -25,7 +26,7 @@ router.get("/:id", async (request, response) => {
     const id = request.params.id
     try{
         const provinciaId = await serviceProv.ObtencionProvinciasID(id)
-        if(provinciaId = false){
+        if(provinciaId == false){
             response.statusCode = 404
             return response.json("Provincia inexistente id no valido")
         }
@@ -42,11 +43,15 @@ router.get("/:id/locations", async (request, response) => {
     const id = request.params.id
     const limit = request.query.limit
     const offset = request.query.offset
+    const path = request.originalUrl
     try{
-        const locationsid = serviceProv.busqLocations(id, limit, offset)
-        if(locationsid = false){
+        const locationsid = await serviceProv.busqLocations(id, limit, offset, path)
+        if(locationsid == false){
             response.statusCode = 404
             return response.json("Localizaciones no encontradas por provincia invalida")
+        }else{
+            response.statusCode = 200
+            return response.json(locationsid)
         }
     }catch(error){
         console.log("Error obtencion localizaciones id")
@@ -55,19 +60,19 @@ router.get("/:id/locations", async (request, response) => {
 })
 
 
-router.post("/", (request, response) => {
+router.post("/", async (request, response) => {
     const name = request.body.name;
     const full_name = request.body.full_name;
     const latitude = request.body.latitude;
     const longitude = request.body.longitude;
     const display_order = request.body.display_order;
-    const cheq = serviceProv.cheqProv(name, longitude, latitude)
+    const cheq = await serviceProv.cheqProv(name, longitude, latitude)
     if(cheq != true){
         response.statusCode = 400
         return response.json(cheq)
     }
     try{
-        const confirmacion = serviceProv.CrearEjercicio7Provincias(name, full_name, latitude, longitude, display_order)
+        const confirmacion = await serviceProv.CrearEjercicio7Provincias(name, full_name, latitude, longitude, display_order)
         response.statusCode = 201
         return response.json(confirmacion)
     }catch(error){
@@ -79,28 +84,29 @@ router.post("/", (request, response) => {
 router.put("/", async (request, response) => {
     const { id,name, full_name, latitude, longitude, display_order } = request.body;
     const cheq = serviceProv.cheqProv(name, longitude, latitude)
-    if(cheq != true){
+    if(cheq == true){
+        try {
+            const confirmacion = await serviceProv.EditarProvincia(id, name, full_name, latitude, longitude, display_order);
+            if(confirmacion == 404){
+                response.statusCode = confirmacion
+                return response.json("Provincia inexistente")
+            }
+            response.statusCode = 200
+            return response.json(confirmacion);
+        } catch(error) {
+            console.error("Error en actualización:", error);
+            return response.status(500).json({ error: "Error en la actualización de la provincia" });
+        }
+    }else{
         response.statusCode = 400
         return response.json(cheq)
-    }
-    try {
-        const confirmacion = await serviceProv.EditarProvincia(id, name, full_name, latitude, longitude, display_order);
-        if(confirmacion == 404){
-            response.statusCode = confirmacion
-            return response.json("Provincia inexistente")
-        }
-        response.statusCode = 200
-        return response.json(confirmacion);
-    } catch(error) {
-        console.error("Error en actualización:", error);
-        return response.status(500).json({ error: "Error en la actualización de la provincia" });
     }
 });
 
 
-router.delete("/:id", (request, respose) => {
+router.delete("/:id", async (request, respose) => {
     try{
-        const confirmacion = serviceProv.EliminarProvincia(request.params.id)
+        const confirmacion = await serviceProv.EliminarProvincia(request.params.id)
         if(confirmacion == 404){
             response.statusCode = confirmacion
             return response.json("Provincia inexistente")
