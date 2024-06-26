@@ -1,4 +1,3 @@
-Controller
 import express, { request, response } from "express"
 import eventService from "../servicios/event-location.js";    
 const router = express.Router()
@@ -87,16 +86,10 @@ router.put("/" ,async (request, response) => {
     }
 })
 
-router.delete("/:id", AuthMiddleware,async (request, response) => {
+router.delete("/:id",async (request, response) => {
     try{
-        const err = eventLocationsService.cheq("aaaa", request.params.id)
-        if(err == 404){
-            response.statusCode = err
-            return response.json("Evento no encontrada")
-        }
-        const msg = await eventLocationsService.deleteCategory(request.params.id)
-        response.statusCode = 200
-        return response.json(msg)
+        const id = request.params.id  
+        const msg = await eventLocationsService.deleteEvento(id)
     }catch(error){
         console.log(error)
         return response.json("Error delete evento")
