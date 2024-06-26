@@ -134,6 +134,7 @@ export default class EventosServicios{
 
     async ListadoParticiPantes(id, first_name, last_name, username, attended, rating){
         const result = await bd.Consulta4(id, first_name, last_name, username, attended, rating)
+        console.log(result)
         const parsedDB = result.map(row => {
             var us = new Object();
             var enrols = new Object();

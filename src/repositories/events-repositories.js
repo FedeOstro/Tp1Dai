@@ -170,15 +170,15 @@ export default class Bd{
         const validaciones = []
         if (variables[0]) validaciones.push(`u.id = '${variables[0]}'`)
         if (variables[1]) validaciones.push(`u.first_name = '${variables[1]}'`)
-        if (variables[2]) validaciones.push(`u.last_name = ${variables[2]}`)
+        if (variables[2]) validaciones.push(`u.last_name = '${variables[2]}'`)
         if (variables[3]) validaciones.push(`u.username = '${variables[3]}'`)
         if (variables[4]) validaciones.push(`en.attended = '${variables[4]}'`)
         if (variables[5]) validaciones.push(`en.rating = '${variables[5]}'`)
         const sql = `select en.id, en.id_event, en.id_user, en.description, en.registration_date_time, en.attended, en.observations, en.rating, u.id as user_id, u.first_name, u.last_name, u.username
         FROM event_enrollments en JOIN users u ON en.id_user = u.id
         ${variables.length > 0 ?  ` AND ${validaciones.join(' AND ')}` : null}`
+        console.log(sql)
         return sql
-        
     }
 
     async Consulta5(evento){

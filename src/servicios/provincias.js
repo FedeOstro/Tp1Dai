@@ -15,22 +15,24 @@ export default class ProvinciasServicios {
     const limited = this.parsedLimit(pageSize)
     const offseted = this.parsedOffset(requestedPage)
     const provincias = await bd.Consulta1(limited, offseted);
-    var provinciasr = new Object();
+    console.log(provincias)
     parseProv = provincias.map((row) => {
+      var provinciasr = new Object();
       provinciasr.id = row.id;
       provinciasr.name = row.name;
       provinciasr.full_name = row.full_name;
       provinciasr.latitude = row.latitude;
       provinciasr.longitude = row.longitude;
+      return {
+        collection: parseProv,
+        pagination: {
+          limit: limited,
+          offset: offseted,
+          nextPage: ((offseted + 1) * limited <= totalCount) ? `${process.env.BASE_URL}/${path}?limit=${limited}&offset=${offseted + 1}` : null,
+        },
+      };
     });
-    return {
-      collection: parseProv,
-      pagination: {
-        limit: pageSize,
-        offset: requestedPage,
-        nextPage: ((offseted + 1) * limited <= totalCount) ? `${process.env.BASE_URL}/${path}?limit=${limited}&offset=${offseted + 1}` : null,
-      },
-    };
+    return parseProv;
   }
 
   async ObtencionProvinciasID(id) {

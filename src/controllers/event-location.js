@@ -4,7 +4,7 @@ const router = express.Router()
 const eventLocationsService = new eventService();
 import AuthMiddleware from "../auth/AuthMiddleware.js"; 
 
-router.get("/" ,async (request, response) => {
+router.get("/", AuthMiddleware ,async (request, response) => {
     const limit = request.query.limit;
     const offset = request.query.offset;
     const url = request.originalUrl;
@@ -18,7 +18,7 @@ router.get("/" ,async (request, response) => {
     }
 })
 
-router.get("/:id" ,async (request, response) =>{
+router.get("/:id", AuthMiddleware ,async (request, response) =>{
     const limit = request.query.limit;
     const offset = request.query.offset;
     const url = request.originalUrl;
@@ -60,7 +60,7 @@ router.post("/", AuthMiddleware, async (request, response) =>{
     }
 })
 
-router.put("/" ,async (request, response) => {
+router.put("/", AuthMiddleware ,async (request, response) => {
     const id = request.body.id
     const name = request.body.name
     const full_address = request.body.full_address
@@ -86,7 +86,7 @@ router.put("/" ,async (request, response) => {
     }
 })
 
-router.delete("/:id",async (request, response) => {
+router.delete("/:id", AuthMiddleware ,async (request, response) => {
     try{
         const id = request.params.id  
         const msg = await eventLocationsService.deleteEvento(id)

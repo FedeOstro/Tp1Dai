@@ -12,7 +12,7 @@ export default class Bd{
     async Consulta1(limited, offseted) {
         const sql = `SELECT * from provinces limit '${limited}' offset '${offseted}'`
         const respuesta = await this.client.query(sql);
-        return respuesta;
+        return respuesta.rows;
     }
     
     async Consulta2(id){

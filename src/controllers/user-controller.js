@@ -38,7 +38,7 @@ router.post("/register", async (req, res) => {
     const { first_name, last_name, username, password } = req.body;
     const cheq = await usuarioServicios.cheqUser(first_name, last_name, username, password)
     if(cheq != true){
-        return response.json(cheq)
+        return res.json(cheq)
     }
     try {
         const resultadoRegistro = await usuarioServicios.register(first_name, last_name, username, password);

@@ -40,7 +40,6 @@ export default class Bd {
         try {
             const respuesta = await this.client.query(sql);
             return respuesta.rows;
-  
         } catch (error) {
             console.error("Error al buscar usuario por nombre de usuario:", error);
             throw new Error("Error al buscar usuario por nombre de usuario");
