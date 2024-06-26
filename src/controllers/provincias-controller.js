@@ -1,4 +1,4 @@
-import express from "express"
+import express, { response } from "express"
 import ProvinciasServicios from "../servicios/provincias.js";
 const router = express.Router()
 const serviceProv = new ProvinciasServicios();
@@ -8,34 +8,53 @@ router.get("/", async (request, response) =>{
     const limit = request.query.limit;
     const offset = request.query.offset;
     try{
-        if(id != null){
-            try{
-                const provinciaId = await serviceProv.ObtencionProvinciasID(id)
-                return response.json(provinciaId);
-            }catch(error){
-                console.log("Error obtencion provincias id")
-                return response.json("Error en la obtencion de la provincia con id")
-            }
-            
-        }else{
-            try{
-                const todoProvincias = await serviceProv.ObtencionProvincias(limit, offset)
-                if(todoProvincias){
-                    return response.json(todoProvincias);
-                }
-            }catch(error){
-                console.log("Error obtencion provincias")
-                return response.json("Error obtenicon de las provincias 7")
-            }
+        const todoProvincias = await serviceProv.ObtencionProvincias(limit, offset)
+        if(todoProvincias){
+            response.statusCode = 200
+            return response.json(todoProvincias);
         }
     }catch(error){
-        console.log("Error en toda obtencion")
-        return response.json("Error en toda manera de obtencion")
+        console.log("Error obtencion provincias")
+        return response.json("Error obtenicon de las provincias 7")
+    }
+})
+    
+
+
+router.get("/:id", async (request, response) => {
+    const id = request.params.id
+    try{
+        const provinciaId = await serviceProv.ObtencionProvinciasID(id)
+        if(provinciaId = false){
+            response.statusCode = 404
+            return response.json("Provincia inexistente id no valido")
+        }
+            response.statusCode = 200
+            return response.json(provinciaId);
+        }catch(error){
+            console.log("Error obtencion provincias id")
+            return response.json("Error en la obtencion de la provincia con id")
+    }
+})
+
+
+router.get("/:id/locations", async (request, response) => {
+    const id = request.params.id
+    try{
+        const locationsid = serviceProv.busqLocations(id)
+        if(locationsid = false){
+            response.statusCode = 404
+            return response.json("Localizaciones no encontradas por provincia invalida")
+        }
+    }catch(error){
+        console.log("Error obtencion localizaciones id")
+        return response.json("Error obtencion localizaciones id")
     }   
 })
 
+
 router.post("/:id", (request, response) => {
-    const name = request.name;
+    const name = request.body.name;
     const full_name = request.body.full_name;
     const latitude = request.body.latitude;
     const longitude = request.body.longitude;
@@ -70,21 +89,5 @@ router.delete("/borrar", (request, respose) => {
         return respose.json("Error en la eliminacion de provincia")
     }
 })
-
-router.post("/crear", async (request, response) => {
-    const { name, full_name, latitude, longitude } = request.body;
-    try {
-      const AutenticarRegistro = await ProvinciasServicios.autenticarRegistro(
-        name,
-        full_name,
-        latitude,
-        longitude
-      );
-      return response.json(AutenticarRegistro);
-    } catch (error) {
-      console.error("Error durante el registro de una provincia:", error);
-      return response.status(500).json({ error: "Error interno del servidor" });
-    }
-  });
 
 export default router
