@@ -129,12 +129,11 @@ export default class ProvinciasServicios {
 
   async EditarProvincia(id, name,full_name, latitude, longitude, display_order ) {
     const cheq = await bd.Consulta2(id)
-    console.log(cheq)
     if(cheq[0] == null){
       return 404
     }
     try {
-      const confirmacion = await bd.Consulta4(id, name, full_name, latitude, longitude, display_order);
+      const confirmacion = await bd.Consulta4(id, name,full_name, latitude, longitude, display_order);
       return ("Provincia editada con éxito");
     } catch (error) {
       console.error("Error en la actualización de la provincia:", error);
@@ -144,12 +143,12 @@ export default class ProvinciasServicios {
 
   async EliminarProvincia(id) {
     const cheq = await bd.Consulta2(id)
-    if(cheq[0] == null){
+    if(cheq[0].length <= 0){
       return 404
     }
     try {
       await bd.Consulta5(id);
-      return "Provincia eliminada con exito";
+      return ("Provincia eliminada con exito");
     } catch (error) {
       console.log("Error eliminacion de provincia servicio");
       return response.json("Error eliminacion de provincia");

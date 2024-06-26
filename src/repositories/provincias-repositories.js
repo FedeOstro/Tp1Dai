@@ -16,7 +16,7 @@ export default class Bd{
     }
     
     async Consulta2(id){
-        const sql = `SELECT * from provinces WHERE id = ${id}`
+        const sql = `SELECT * FROM provinces WHERE id = '${id}'`
         const respuesta = await this.client.query(sql);
         return respuesta.rows
     } 
@@ -42,9 +42,8 @@ export default class Bd{
     }
     
     async Consulta5(id){
-        const sql = `DELETE * 
-        FROM provinces 
-        WHERE id = '${id}'`
+        const sql = `DELETE FROM locations WHERE id_province = '${id}';DELETE FROM provinces WHERE id = ${id}`
+        console.log(sql)
         const respuesta = await this.client.query(sql);
         return respuesta
     }

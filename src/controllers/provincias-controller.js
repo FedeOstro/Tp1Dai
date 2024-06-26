@@ -83,7 +83,7 @@ router.post("/", async (request, response) => {
 
 router.put("/", async (request, response) => {
     const { id,name, full_name, latitude, longitude, display_order } = request.body;
-    const cheq = serviceProv.cheqProv(name, longitude, latitude)
+    const cheq = await serviceProv.cheqProv(name, longitude, latitude) 
     if(cheq == true){
         try {
             const confirmacion = await serviceProv.EditarProvincia(id, name, full_name, latitude, longitude, display_order);
@@ -117,6 +117,6 @@ router.delete("/:id", async (request, respose) => {
         console.log("Error en la eliminacion de provincia")
         return respose.json("Error en la eliminacion de provincia")
     }
-})
+}) 
 
 export default router
