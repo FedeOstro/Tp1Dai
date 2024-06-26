@@ -161,8 +161,8 @@ router.patch("/:id/enrollment/:rating", AuthMiddleware, async (request, response
     const observations = request.body.observations
     const id_user = request.user.id
     try{
-        const msg = eventService.VerificarEnrollment(id_evento, rating, observations, id_user)
-        if(msg = false){
+        const msg = await eventService.VerificarEnrollment(id_evento, rating, id_user)
+        if(msg == false){
             response.statusCode = 404
             return response.json("Evento inexistente")
         }else if(msg != true){
