@@ -67,7 +67,6 @@ router.put("/", AuthMiddleware ,async (request, response) => {
     const max_capacity = request.body.max_capacity
     const latitude = request.body.latitude
     const longitude = request.body.longitude
-    const id_creator_user = request.user.id
     try{
         const err = eventLocationsService.cheq(id_location, name, full_address, max_capacity)
         if(err == 400){

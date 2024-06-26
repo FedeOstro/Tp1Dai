@@ -242,7 +242,7 @@ export default class EventosServicios{
         return
     }
 
-    async VerificarEnrollment(id_evento, rating, observations, id_user){
+    async VerificarEnrollment(id_evento, rating, id_user){
         const userTa = await bd.BusqUser(id_user)
         if(userTa == null){
             return("No esta inscripto el usuario")
@@ -253,9 +253,10 @@ export default class EventosServicios{
         }
         const start_date = event[0].start_date
         const hoy = new Date()
-        if(start_date < hoy){
+        if(start_date > hoy){
             return("Error el eventon no a finalizado")
         }
+
         if(rating < 1 && rating > 10){
             return("Error rating ingresado invalido se debe encontrar entre 1 y 10")
         }
