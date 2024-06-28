@@ -42,10 +42,11 @@ export default class Bd{
     }
     
     async Consulta5(id){
-        const sql2 = `SELECT id FROM locations WHERE id_province = '${id}'`
-        const idLocation = await this.client.query(sql2)
-        const sql3 = `SELECT id FROM event_locations WHERE id_location = '${idLocation}'`
-        const sql = `DELETE FROM locations WHERE id_province = ${id}; DELETE FROM provinces WHERE id = ${id}`
+        const sql2 = `SELECT * FROM locations WHERE id_province = '${id}'`
+        const cheq = await this.client.query(sql2)
+        const chqq = cheq.rows
+        console.log(chqq.lenght)
+        const sql = `${chqq.lenght > 0 ? `DELETE FROM locations WHERE id_province = ${id} ;`: ''} DELETE FROM provinces WHERE id = ${id}`
         console.log(sql)
         const respuesta = await this.client.query(sql);
         return respuesta

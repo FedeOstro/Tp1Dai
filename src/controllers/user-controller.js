@@ -11,10 +11,10 @@ router.post("/login", async (req, res) => {
     try {
         const usuario = await usuarioServicios.login(username, password);
         if(usuario == 400){
-            res.status = usuario 
-            return response.json ("Usuario Invalido")
+            res.statusCode = usuario 
+            return res.json ("Usuario Invalido")
         }else if (usuario == 401){
-            res.status = usuario
+            res.statusCode = usuario
             return response.json ("Contraseña Invalida")
         }else{
             const token = await generarToken(usuario);
@@ -42,14 +42,16 @@ router.post("/register", async (req, res) => {
     }
     try {
         const resultadoRegistro = await usuarioServicios.register(first_name, last_name, username, password);
-        return res.status(201).json({
+        res.statusCode = 201
+        return res.json({
             success: true,
             message: resultadoRegistro.message,
             userId: resultadoRegistro.userId
         });
     } catch (error) {
         console.error("Error durante el registro de usuario:", error.message);
-        return res.status(error.status || 500).json({
+        res.statusCode = 500
+        return res.json({
             success: false,
             message: error.message
         });

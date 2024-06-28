@@ -148,7 +148,7 @@ router.delete("/:id", AuthMiddleware,async (request, response) => {
         }
         const confirmacion = eventService.EliminarEjercicio8Eventos(request.params.id)
         response.statusCode = 200
-        return response.json("Evento borrado con exito")
+        return response.json(confirmacion)
     }catch(error){
         console.log("Error en el delete eventos")
         return response.json("Error en borrado de evento")
