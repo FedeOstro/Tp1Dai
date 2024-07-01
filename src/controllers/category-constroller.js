@@ -80,7 +80,7 @@ router.put("/", async (request, response) => {
 
 router.delete("/:id", async (request, response) => {
     try{
-        const err = categoryServices.cheq("aaaa", request.params.id)
+        const err = await categoryServices.cheq("aaaa", request.params.id)
         if(err == 404){
             response.statusCode = err
             return response.json("Categoria no encontrada")

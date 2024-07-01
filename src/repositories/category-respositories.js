@@ -36,10 +36,8 @@ export default class Bd{
     }
 
     async consulta5(id){
-        console.log(id)
         const bd = `DELETE FROM events WHERE id_event_category = '${id}' ;DELETE FROM event_categories WHERE id = '${id}'`
         const rta = await this.client.query(bd)
         return rta
-        //Volver mas tarde hacer select Id evento
     }
 }

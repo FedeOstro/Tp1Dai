@@ -96,7 +96,7 @@ export default class locationServicios{
 
     async deleteEvento(id){
         const event = await bd.consulta6(id)
-        if (event != null){
+        if (event[0] != null){
             const result = await bd.consulta5(id)
             return ("Borrado efectivamente")
         }else{

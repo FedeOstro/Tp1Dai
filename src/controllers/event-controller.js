@@ -146,7 +146,7 @@ router.delete("/:id", AuthMiddleware,async (request, response) => {
             response.statusCode = 400
             return response.json(msg)
         }
-        const confirmacion = eventService.EliminarEjercicio8Eventos(request.params.id)
+        const confirmacion = await eventService.EliminarEjercicio8Eventos(request.params.id)
         response.statusCode = 200
         return response.json(confirmacion)
     }catch(error){

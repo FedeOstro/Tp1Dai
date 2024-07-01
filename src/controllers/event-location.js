@@ -86,10 +86,14 @@ router.put("/", AuthMiddleware ,async (request, response) => {
 })
 
 router.delete("/:id", AuthMiddleware ,async (request, response) => {
-    console.log("Hola")
     try{
         const id = request.params.id  
         const msg = await eventLocationsService.deleteEvento(id)
+        if(msg == 404){
+            response.statusCode = msg
+            return response.json("Event Location no encontrada")
+        }
+        return response.json(msg)
     }catch(error){
         console.log(error)
         return response.json("Error delete evento")
